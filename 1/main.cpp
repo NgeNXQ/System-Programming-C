@@ -1,20 +1,131 @@
-// Labwork_1.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
+﻿#include <iostream>
+#include <stdexcept>
+#include <string>
+#include "Database.h"
 
-#include <iostream>
+using namespace LibraryDatabase;
+
+int displayMenu();
+void hire(Database& inDB);
+void fire(Database& inDB);
+void promote(Database& inDB);
+void demote(Database& inDB);
 
 int main()
 {
-    std::cout << "Hello World!\n";
+	Database employeeDB;
+	bool done = false;
+
+	while (!done) 
+	{
+		int selection = displayMenu();
+
+		switch (selection) 
+		{
+		case 1:
+			hire(employeeDB);
+			break;
+		case 2:
+			fire(employeeDB);
+			break;
+		case 3:
+			promote(employeeDB);
+			break;
+		case 4:
+			employeeDB.showAll();
+			break;
+		case 5:
+			employeeDB.showCurrent();
+			break;
+		case 6:
+			employeeDB.showFormer();
+			break;
+		case 0:
+			done = true;
+			break;
+		default:
+			std::cerr << "Unknown command." << std::endl;
+		}
+	}
 }
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
+int displayMenu()
+{
+	int selection;
+	std::cout << std::endl;
+	std::cout << "Employee Database" << std::endl;
+	std::cout << "-----------------" << std::endl;
+	std::cout << "1) Hire a new employee" << std::endl;
+	std::cout << "2) Fire an employee" << std::endl;
+	std::cout << "3) Promote an employee" << std::endl;
+	std::cout << "4) List all employees" << std::endl;
+	std::cout << "5) List all current employees" << std::endl;
+	std::cout << "6) List all previous employees" << std::endl;
+	std::cout << "0) Quit" << std::endl;
+	std::cout << std::endl;
 
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
+	std::cout << "---> ";
+	std::cin >> selection;
+	return selection;
+}
+
+void hire(Database& inDB)
+{
+	std::string firstName;
+	std::string middleName;
+	std::string lastName;
+
+	std::cout << "Last name? ";
+	std::cin >> lastName;
+	std::cout << "First name? ";
+	std::cin >> firstName;
+	std::cout << "Middle name? ";
+	std::cin >> middleName;
+
+	try 
+	{
+		inDB.addEmployee(firstName, middleName, lastName);
+	}
+	catch (std::exception ex) 
+	{
+		std::cerr << "Unable to add new employee!" << std::endl;
+	}
+}
+
+void fire(Database& inDB)
+{
+	int employeeNumber;
+	std::cout << "Employee number? ";
+	std::cin >> employeeNumber;
+
+	try 
+	{
+		Employee& emp = inDB.getEmployee(employeeNumber);
+		emp.fire();
+		std::cout << "Employee " << employeeNumber << " has been terminated." << std::endl;
+	}
+	catch (std::exception ex) 
+	{
+		std::cerr << "Unable to terminate employee!" << std::endl;
+	}
+}
+
+void promote(Database& inDB)
+{
+	int employeeNumber;
+	int raiseAmount;
+	std::cout << "Employee number? ";
+	std::cin >> employeeNumber;
+	std::cout << "How much of a raise? ";
+	std::cin >> raiseAmount;
+
+	try 
+	{
+		Employee& emp = inDB.getEmployee(employeeNumber);
+		emp.promote(raiseAmount);
+	}
+	catch (...) 
+	{
+		std::cerr << "Unable to promote employee!" << std::endl;
+	}
+}
