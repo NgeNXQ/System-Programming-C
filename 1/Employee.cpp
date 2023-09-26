@@ -4,22 +4,6 @@
 
 namespace LibraryDatabase 
 {
-	//Employee::Employee() : ID(-1), SEX(Employee::Sex::Undefined) { };
-
-	//Employee::Employee(std::string firstName, std::string middleName, std::string lastName, int id,
-	//				   Sex sex, int age, Position positionId, int passportId, std::string address) : ID(id), SEX(sex)
-	//{
-	//	this->firstName = firstName;
-	//	this->middleName = middleName;
-	//	this->lastName = lastName;
-	//	this->age = age;
-	//	this->passportId = passportId;
-	//	this->address = address;
-	//	this->positionId = Position::Undefined;
-	//	this->salary = 0.0;
-	//	this->isHired = false;
-	//}
-
 	Employee::Employee()
 	{
 		this->firstName = "";
@@ -57,21 +41,18 @@ namespace LibraryDatabase
 
 	void Employee::showInfo()
 	{
-		std::cout << "Employee: " << this->getLastName() << this->getFirstName() << this->getMiddleName() << std::endl
+		std::cout << "Employee: " << this->getLastName() << ' ' << this->getFirstName() << ' ' << this->getMiddleName() << std::endl
+				  << "Age: " << this->getAge() << std::endl
 				  << "ID: " << this->getId() << std::endl
 				  << (this->isHired ? "Current employee" : "Former employee") << std::endl
-				  << "Salary: $" << this->getSalary() << std::endl;
+				  << "Salary: $" << this->getSalary() << std::endl
+				  << "Position ID: " << this->getId() << std::endl
+				  << "Passport ID: " << this->getPassportId() << std::endl
+				  << "Address: " << this->getAddress() << std::endl << std::endl;;
 	}
-
-	//int Employee::getId() const
-	//{
-	//	//return this->ID;
-	//	return this->id;
-	//}
 
 	int Employee::getId()
 	{
-		//return this->ID;
 		return this->id;
 	}
 
@@ -134,17 +115,15 @@ namespace LibraryDatabase
 		else
 			std::cout << "Invalid input value. Age must be greater than 0." << std::endl;
 	}
-	
-	//Employee::Sex Employee::getSex() const
-	//{
-	//	//return this->SEX;
-	//	return this->sex;
-	//}
 
 	Employee::Sex Employee::getSex()
 	{
-		//return this->SEX;
 		return this->sex;
+	}
+
+	void Employee::SetSex(Sex sex)
+	{
+		this->sex = sex;
 	}
 
 	int Employee::getPassportId()
@@ -155,6 +134,11 @@ namespace LibraryDatabase
 	void Employee::setPassportId(int passportId)
 	{
 		this->passportId = passportId;
+	}
+
+	std::string Employee::getAddress()
+	{
+		return this->address;
 	}
 
 	void Employee::setAddress(std::string address)

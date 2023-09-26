@@ -47,11 +47,14 @@ int main()
 			std::cerr << "Unknown command." << std::endl;
 		}
 	}
+
+	return EXIT_SUCCESS;
 }
 
 int displayMenu()
 {
 	int selection;
+
 	std::cout << std::endl;
 	std::cout << "Employee Database" << std::endl;
 	std::cout << "-----------------" << std::endl;
@@ -66,6 +69,7 @@ int displayMenu()
 
 	std::cout << "---> ";
 	std::cin >> selection;
+
 	return selection;
 }
 
@@ -124,8 +128,28 @@ void promote(Database& inDB)
 		Employee& emp = inDB.getEmployee(employeeNumber);
 		emp.promote(raiseAmount);
 	}
-	catch (...) 
+	catch (std::exception ex)
 	{
 		std::cerr << "Unable to promote employee!" << std::endl;
+	}
+}
+
+void demote(Database& inDB)
+{
+	int employeeNumber;
+	int reduceAmount;
+	std::cout << "Employee number? ";
+	std::cin >> employeeNumber;
+	std::cout << "How much of a reduce? ";
+	std::cin >> reduceAmount;
+
+	try
+	{
+		Employee& emp = inDB.getEmployee(employeeNumber);
+		emp.demote(reduceAmount);
+	}
+	catch (std::exception ex)
+	{
+		std::cerr << "Unable to demote employee!" << std::endl;
 	}
 }

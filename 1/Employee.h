@@ -29,16 +29,12 @@ namespace LibraryDatabase
 
 		Employee();
 
-		//Employee(std::string firstName, std::string middleName, std::string lastName, int id,
-		//	     Sex sex, int age, Position positionId, int passportId, std::string address);
-
 		void promote(double raiseAmount);
 		void demote(double reduceAmount);
 		void hire();
 		void fire();
 		void showInfo();
 
-		//int getId() const;
 		int getId();
 		void SetId(int id);
 
@@ -54,8 +50,8 @@ namespace LibraryDatabase
 		int getAge();
 		void setAge(int age);
 		
-		//Employee::Sex getSex() const;
-		Employee::Sex getSex();
+		Sex getSex();
+		void SetSex(Sex sex);
 
 		int getPassportId();
 		void setPassportId(int passportId);
@@ -72,8 +68,6 @@ namespace LibraryDatabase
 		bool getIsHired();
 
 	private:
-		//const int ID;
-		//const Sex SEX;
 		int id;
 		Sex sex;
 		std::string firstName;

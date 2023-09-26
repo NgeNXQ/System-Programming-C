@@ -11,11 +11,6 @@ namespace LibraryDatabase
 		this->index = 0;
 	}
 
-	Database::~Database()
-	{
-		//deallocate all objects with a loop
-	}
-
 	Employee& Database::addEmployee(std::string firstName, std::string middleName, std::string lastName)
 	{
 		if (this->index + 1 < this->CAPACITY)
@@ -49,12 +44,8 @@ namespace LibraryDatabase
 	{
 		for (int i = 0; i < index; ++i) 
 		{
-			if (this->employees[i].getFirstName() == firstName && 
-				this->employees[i].getMiddleName() == middleName && 
-				this->employees[i].getLastName() == lastName) 
-			{
+			if (this->employees[i].getFirstName() == firstName && this->employees[i].getMiddleName() == middleName && this->employees[i].getLastName() == lastName) 
 				return this->employees[i];
-			}
 		}
 
 		std::cerr << "No match with name " << lastName << " " << firstName << middleName << std::endl;
@@ -64,9 +55,7 @@ namespace LibraryDatabase
 	void Database::showAll()
 	{
 		for (int i = 0; i < this->index; ++i) 
-		{
 			this->employees[i].showInfo();
-		}
 	}
 
 	void Database::showCurrent()

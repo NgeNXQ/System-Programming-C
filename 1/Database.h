@@ -6,7 +6,6 @@ namespace LibraryDatabase
 	{
 	public:
 		Database();
-		~Database();
 
 		Employee& addEmployee(std::string firstName, std::string middleName, std::string lastName);
 
