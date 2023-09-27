@@ -28,8 +28,8 @@ namespace LibraryDatabase
 
 		Employee();
 
-		void promote(double raiseAmount);
-		void demote(double reduceAmount);
+		void promote(int raiseAmount);
+		void demote(int reduceAmount);
 		void hire(Position position);
 		void fire();
 		void showInfo();
@@ -61,8 +61,8 @@ namespace LibraryDatabase
 		Position getPosition();
 		void setPosition(Position position);
 
-		double getSalary();
-		void setSalary(double newSalary);
+		int getSalary();
+		void setSalary(int newSalary);
 
 		bool getIsHired();
 
@@ -76,7 +76,7 @@ namespace LibraryDatabase
 		int passportId;
 		std::string address;
 		Position position;
-		double salary;
+		int salary;
 		bool isHired;
 	};
 }

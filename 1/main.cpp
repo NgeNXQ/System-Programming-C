@@ -8,11 +8,12 @@ using namespace LibraryDatabase;
 
 void clear();
 int displayMenu();
-void hire(Database& inDB);
-void fire(Database& inDB);
-void edit(Database& inDB);
-void demote(Database& inDB);
-void promote(Database& inDB);
+void hire(Database&);
+void fire(Database&);
+void edit(Database&);
+void demote(Database&);
+void promote(Database&);
+int readIntInput(const std::string&, int, int);
 
 int main()
 {
@@ -139,7 +140,6 @@ void hire(Database& inDB)
 	std::string firstName;
 	std::string middleName;
 	std::string lastName;
-	unsigned char positionId;
 
 	std::cout << "Last name: ";
 	std::cin >> lastName;
@@ -148,17 +148,7 @@ void hire(Database& inDB)
 	std::cout << "Middle name: ";
 	std::cin >> middleName;
 
-	std::cout << "Employee position?\n"
-		<< "1 for Librarian,\n"
-		<< "2 for Librarian Assistant,\n"
-		<< "3 for System Administrator,\n"
-		<< "4 for Director,\n"
-		<< "5 for Security Officer,\n"
-		<< "6 for Secretary,\n"
-		<< "7 for Cleaner\n"
-		<< "Enter: ";
-
-	std::cin >> positionId;
+	unsigned char positionId = readIntInput("Employee position: ", 1, 7);
 
 	try 
 	{
@@ -174,9 +164,7 @@ void hire(Database& inDB)
 
 void fire(Database& inDB)
 {
-	int employeeNumber;
-	std::cout << "Employee number: ";
-	std::cin >> employeeNumber;
+	int employeeNumber = readIntInput("Employee number: ", 1, std::numeric_limits<int>::max());
 
 	try 
 	{
@@ -192,12 +180,8 @@ void fire(Database& inDB)
 
 void promote(Database& inDB)
 {
-	int employeeNumber;
-	int raiseAmount;
-	std::cout << "Employee number: ";
-	std::cin >> employeeNumber;
-	std::cout << "How much of a raise: ";
-	std::cin >> raiseAmount;
+	int employeeNumber = readIntInput("Employee number: ", 1, std::numeric_limits<int>::max());
+	int raiseAmount = readIntInput("How much of a raise: ", 0, std::numeric_limits<int>::max());
 
 	try 
 	{
@@ -213,12 +197,8 @@ void promote(Database& inDB)
 
 void demote(Database& inDB)
 {
-	int employeeNumber;
-	int reduceAmount;
-	std::cout << "Employee number: ";
-	std::cin >> employeeNumber;
-	std::cout << "How much of a reduce: ";
-	std::cin >> reduceAmount;
+	int employeeNumber = readIntInput("Employee number: ", 1, std::numeric_limits<int>::max());
+	int reduceAmount = readIntInput("How much of a reduce: ", 0, std::numeric_limits<int>::max());
 
 	try
 	{
@@ -234,27 +214,19 @@ void demote(Database& inDB)
 
 void edit(Database& inDB) 
 {
-	int employeeNumber;
-	std::cout << "Employee number: ";
-	std::cin >> employeeNumber;
+	int employeeNumber = readIntInput("Employee number: ", 1, std::numeric_limits<int>::max());
 
 	try
 	{
 		Employee& emp = inDB.getEmployee(employeeNumber);
 
-		int age;
-		std::cout << "Employee age: ";
-		std::cin >> age;
+		int age = readIntInput("Employee age: ", 18, 100);
 		emp.setAge(age);
 
-		unsigned char sex;
-		std::cout << "Employee sex? Enter 0 for Male, 1 for Female: ";
-		std::cin >> sex;
+		unsigned char sex = readIntInput("Employee sex? Enter 0 for Male, 1 for Female: ", 0, 1);
 		emp.setSex((Employee::Sex)sex);
 
-		int passportId;
-		std::cout << "Employee passport ID: ";
-		std::cin >> passportId;
+		int passportId = readIntInput("Employee passport ID: ", 0, std::numeric_limits<int>::max());
 		emp.setPassportId(passportId);
 
 		std::string address;
@@ -263,23 +235,10 @@ void edit(Database& inDB)
 		std::getline(std::cin, address);
 		emp.setAddress(address);
 
-		unsigned char positionId;
-		std::cout << "Employee position?\n"
-				  << "1 for Librarian,\n"
-				  << "2 for Librarian Assistant,\n"
-				  << "3 for System Administrator,\n"
-				  << "4 for Director,\n"
-				  << "5 for Security Officer,\n"
-				  << "6 for Secretary,\n"
-				  << "7 for Cleaner\n"
-				  << "Enter: ";
-
-		std::cin >> positionId;
+		unsigned char positionId = readIntInput("Employee position: ", 1, 7);
 		emp.setPosition((Employee::Position)positionId);
 
-		double salary;
-		std::cout << "Employee salary: ";
-		std::cin >> salary;
+		int salary = readIntInput("Employee salary: ", 0, std::numeric_limits<int>::max());
 		emp.setSalary(salary);
 
 		clear();
@@ -291,10 +250,32 @@ void edit(Database& inDB)
 	}
 }
 
-//int intInput(int min, int max)
-//{
-//
-//}
+int readIntInput(const std::string& inputInvitation, int min, int max)
+{
+	while (true) 
+	{
+		std::cout << inputInvitation;
+		std::string userInput;
+		std::cin >> userInput;
+
+		if (!userInput.empty() &&
+			(userInput[0] == '-' || (userInput[0] >= '0' && userInput[0] <= '9')) &&
+			(userInput.find_first_not_of("0123456789", 1) == std::string::npos))
+		{
+			int result = std::stoi(userInput);
+
+			if (result >= min && result <= max)
+				return result;
+			else 
+				std::cout << "Input is not within the specified range. [" << min << ";" << max << "]." << std::endl;
+		}
+		else 
+			std::cout << "Invalid input. Please enter a valid integer." << std::endl;
+
+		std::cin.clear();
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	}
+}
 
 void clear()
 {

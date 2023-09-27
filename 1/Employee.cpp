@@ -14,16 +14,16 @@ namespace LibraryDatabase
 		this->passportId = -1;
 		this->address = "";
 		this->position = Position::Undefined;
-		this->salary = 0.0;
+		this->salary = 0;
 		this->isHired = false;
 	}
 
-	void Employee::promote(double raiseAmount = 100.0)
+	void Employee::promote(int raiseAmount = 100)
 	{
 		this->setSalary(this->getSalary() + raiseAmount);
 	}
 
-	void Employee::demote(double reduceAmount = 100.0)
+	void Employee::demote(int reduceAmount = 100)
 	{
 		this->setSalary(this->getSalary() - reduceAmount);
 	}
@@ -48,7 +48,7 @@ namespace LibraryDatabase
 			throw std::exception();
 		}
 
-		this->salary = 0.0;
+		this->salary = 0;
 		this->isHired = false;
 		this->position = Employee::Position::Undefined;
 	}
@@ -173,12 +173,12 @@ namespace LibraryDatabase
 		this->position = position;
 	}
 
-	double Employee::getSalary()
+	int Employee::getSalary()
 	{
 		return this->salary;
 	}
 
-	void Employee::setSalary(double newSalary)
+	void Employee::setSalary(int newSalary)
 	{
 		if (newSalary > 0)
 			this->salary = newSalary;
