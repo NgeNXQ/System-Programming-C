@@ -29,7 +29,7 @@ namespace LibraryDatabase
 			newEmployee.setFirstName(firstName);
 			newEmployee.setMiddleName(middleName);
 			newEmployee.setLastName(lastName);
-			newEmployee.SetId(this->index);
+			newEmployee.setId(this->index);
 			newEmployee.hire(position);
 			return newEmployee;
 #endif // STACK
@@ -43,8 +43,8 @@ namespace LibraryDatabase
 			this->employees[this->index]->hire(position);
 			++this->index;
 			return *(this->employees[this->index - 1]);
-		}
 #endif // HEAP
+		}
 
 		std::cerr << "There is no more room to add the new employee!" << std::endl;
 		throw std::exception();

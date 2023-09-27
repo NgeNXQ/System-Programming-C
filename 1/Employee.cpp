@@ -13,7 +13,7 @@ namespace LibraryDatabase
 		this->age = -1;
 		this->passportId = -1;
 		this->address = "";
-		this->positionId = Position::Undefined;
+		this->position = Position::Undefined;
 		this->salary = 0.0;
 		this->isHired = false;
 	}
@@ -37,7 +37,7 @@ namespace LibraryDatabase
 		}
 
 		this->isHired = true;
-		this->positionId = position;
+		this->position = position;
 	}
 
 	void Employee::fire()
@@ -50,7 +50,7 @@ namespace LibraryDatabase
 
 		this->salary = 0.0;
 		this->isHired = false;
-		this->positionId = Employee::Position::Undefined;
+		this->position = Employee::Position::Undefined;
 	}
 
 	void Employee::showInfo()
@@ -135,7 +135,7 @@ namespace LibraryDatabase
 		return this->sex;
 	}
 
-	void Employee::SetSex(Sex sex)
+	void Employee::setSex(Sex sex)
 	{
 		this->sex = sex;
 	}
@@ -163,14 +163,14 @@ namespace LibraryDatabase
 			std::cout << "Invalid input value. The string must contain at least one character." << std::endl;
 	}
 	
-	Employee::Position Employee::getPositionId()
+	Employee::Position Employee::getPosition()
 	{
-		return this->positionId;
+		return this->position;
 	}
 
-	void Employee::setPositionId(Employee::Position positionId)
+	void Employee::setPosition(Employee::Position position)
 	{
-		this->positionId = positionId;
+		this->position = position;
 	}
 
 	double Employee::getSalary()

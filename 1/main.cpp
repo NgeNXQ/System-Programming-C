@@ -250,7 +250,7 @@ void edit(Database& inDB)
 		unsigned char sex;
 		std::cout << "Employee sex? Enter 0 for Male, 1 for Female: ";
 		std::cin >> sex;
-		emp.SetSex((Employee::Sex)sex);
+		emp.setSex((Employee::Sex)sex);
 
 		int passportId;
 		std::cout << "Employee passport ID: ";
@@ -275,7 +275,7 @@ void edit(Database& inDB)
 				  << "Enter: ";
 
 		std::cin >> positionId;
-		emp.setPositionId((Employee::Position)positionId);
+		emp.setPosition((Employee::Position)positionId);
 
 		double salary;
 		std::cout << "Employee salary: ";

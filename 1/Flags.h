@@ -1,2 +1,2 @@
-//#define STACK
-#define HEAP
+#define STACK
+//#define HEAP

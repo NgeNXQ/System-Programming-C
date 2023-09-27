@@ -50,7 +50,7 @@ namespace LibraryDatabase
 		void setAge(int age);
 		
 		Sex getSex();
-		void SetSex(Sex sex);
+		void setSex(Sex sex);
 
 		int getPassportId();
 		void setPassportId(int passportId);
@@ -58,8 +58,8 @@ namespace LibraryDatabase
 		std::string getAddress();
 		void setAddress(std::string address);
 
-		Position getPositionId();
-		void setPositionId(Position positionId);
+		Position getPosition();
+		void setPosition(Position position);
 
 		double getSalary();
 		void setSalary(double newSalary);
@@ -75,7 +75,7 @@ namespace LibraryDatabase
 		int age;
 		int passportId;
 		std::string address;
-		Position positionId;
+		Position position;
 		double salary;
 		bool isHired;
 	};
