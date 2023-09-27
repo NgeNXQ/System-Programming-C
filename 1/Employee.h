@@ -35,7 +35,7 @@ namespace LibraryDatabase
 		void showInfo();
 
 		int getId();
-		void SetId(int id);
+		void setId(int id);
 
 		std::string getFirstName();
 		void setFirstName(std::string firstName);

@@ -1,3 +1,4 @@
+#include "Flags.h"
 #include "Employee.h"
 
 namespace LibraryDatabase 
@@ -19,13 +20,14 @@ namespace LibraryDatabase
 
 	private:
 		static const int CAPACITY = 100;
+		int index;
+
 #ifdef STACK
 		Employee employees[CAPACITY];
 #endif //STACK
 
 #ifdef HEAP
 		Employee* employees[CAPACITY];
-#endif //HEAP
-		int index;
+#endif //HEAP	
 	};
 }

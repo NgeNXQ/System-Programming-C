@@ -70,7 +70,7 @@ namespace LibraryDatabase
 		return this->id;
 	}
 
-	void Employee::SetId(int id)
+	void Employee::setId(int id)
 	{
 		if (id > 0)
 			this->id = id;

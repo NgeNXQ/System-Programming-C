@@ -1,3 +1,4 @@
+#include "Flags.h"
 #include "Database.h"
 #include "Employee.h"
 #include <iostream>
@@ -21,7 +22,7 @@ namespace LibraryDatabase
 
 	Employee& Database::addEmployee(std::string firstName, std::string middleName, std::string lastName, Employee::Position position)
 	{
-		if (this->index + 1 < this->CAPACITY)
+		if (this->index < this->CAPACITY)
 		{
 #ifdef STACK
 			Employee& newEmployee = this->employees[this->index++];
@@ -34,15 +35,16 @@ namespace LibraryDatabase
 #endif // STACK
 
 #ifdef HEAP
-			employees[index] = new Employee();
-			*(employees[index - 1]).setFirstName(firstName);
-			*(employees[index - 1]).setMiddleName(middleName);
-			*(employees[index - 1]).setLastName(lastName);
-			*(employees[index - 1]).SetId(this->index);
-			*(employees[index - 1]).hire(position);
-			return *(employees[index - 1]);
-#endif // HEAP
+			this->employees[this->index] = new Employee();
+			this->employees[this->index]->setFirstName(firstName);
+			this->employees[this->index]->setMiddleName(middleName);
+			this->employees[this->index]->setLastName(lastName);
+			this->employees[this->index]->setId(this->index + 1);
+			this->employees[this->index]->hire(position);
+			++this->index;
+			return *(this->employees[this->index - 1]);
 		}
+#endif // HEAP
 
 		std::cerr << "There is no more room to add the new employee!" << std::endl;
 		throw std::exception();
@@ -58,8 +60,8 @@ namespace LibraryDatabase
 #endif // STACK
 
 #ifdef HEAP
-			if (this->*(employees[index]).getId() == employeeId)
-				return this->*(employees[index]);
+			if (this->employees[i]->getId() == employeeId)
+				return *(this->employees[i]);
 #endif // STACK
 			
 		}
@@ -78,8 +80,8 @@ namespace LibraryDatabase
 #endif // STACK
 
 #ifdef HEAP
-			if (this->*(employees[index]).getFirstName() == firstName && this->*(employees[index]).getMiddleName() == middleName && this->*(employees[index]).getLastName() == lastName)
-				return this->*(employees[index]);
+			if (this->employees[i]->getFirstName() == firstName && this->employees[i]->getMiddleName() == middleName && this->employees[i]->getLastName() == lastName)
+				return *(this->employees[i]);
 #endif // STACK
 			
 		}
@@ -97,7 +99,7 @@ namespace LibraryDatabase
 #endif // STACK
 
 #ifdef HEAP
-			this->*(employees[index]).showInfo();
+			this->employees[i]->showInfo();
 #endif // STACK
 		}		
 	}
@@ -112,8 +114,8 @@ namespace LibraryDatabase
 #endif // STACK
 
 #ifdef HEAP
-			if (this->*(employees[index]).getIsHired())
-				this->*(employees[index]).showInfo();
+			if (this->employees[i]->getIsHired())
+				this->employees[i]->showInfo();
 #endif // STACK
 			
 		}
@@ -129,8 +131,8 @@ namespace LibraryDatabase
 #endif // STACK
 
 #ifdef HEAP
-			if (!this->*(employees[index]).getIsHired())
-				this->*(employees[index]).showInfo();
+			if (!this->employees[i]->getIsHired())
+				this->employees[i]->showInfo();
 #endif // STACK
 
 		}

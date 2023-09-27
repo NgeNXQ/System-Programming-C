@@ -1,10 +1,8 @@
-﻿#define STACK
-//#define HEAP
-
+﻿#include "Flags.h"
+#include "Database.h"
 #include <iostream>
 #include <stdexcept>
 #include <string>
-#include "Database.h"
 
 using namespace LibraryDatabase;
 
