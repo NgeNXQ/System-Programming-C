@@ -1,4 +1,5 @@
 ﻿#include "Employee.h"
+#include <stdexcept>
 #include <iostream>
 #include <string>
 
@@ -27,13 +28,26 @@ namespace LibraryDatabase
 		this->setSalary(this->getSalary() - reduceAmount);
 	}
 
-	void Employee::hire()
+	void Employee::hire(Position position)
 	{
+		if (this->isHired)
+		{
+			std::cerr << "Employee has already been hired!" << std::endl;
+			throw std::exception();
+		}
+
 		this->isHired = true;
+		this->positionId = position;
 	}
 
 	void Employee::fire()
 	{
+		if (!this->isHired)
+		{
+			std::cerr << "Employee has already been terminated!" << std::endl;
+			throw std::exception();
+		}
+
 		this->salary = 0.0;
 		this->isHired = false;
 		this->positionId = Employee::Position::Undefined;
@@ -48,7 +62,7 @@ namespace LibraryDatabase
 				  << "Salary: $" << this->getSalary() << std::endl
 				  << "Position ID: " << this->getId() << std::endl
 				  << "Passport ID: " << this->getPassportId() << std::endl
-				  << "Address: " << this->getAddress() << std::endl << std::endl;;
+				  << "Address: " << this->getAddress() << std::endl << std::endl;
 	}
 
 	int Employee::getId()

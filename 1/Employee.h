@@ -10,7 +10,6 @@ namespace LibraryDatabase
 	public:
 		enum class Sex : unsigned char
 		{
-			Undefined,
 			Male,
 			Female
 		};
@@ -31,7 +30,7 @@ namespace LibraryDatabase
 
 		void promote(double raiseAmount);
 		void demote(double reduceAmount);
-		void hire();
+		void hire(Position position);
 		void fire();
 		void showInfo();
 
