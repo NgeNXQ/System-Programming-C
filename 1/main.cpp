@@ -60,6 +60,15 @@ int main()
 #endif // HEAP
 			break;
 		case 4:
+#ifdef STACK
+			demote(employeeDB);
+#endif // STACK
+
+#ifdef HEAP
+			demote(*employeeDB);
+#endif // HEAP
+			break;
+		case 5:
 			clear();
 #ifdef STACK
 			employeeDB.showAll();
@@ -69,7 +78,7 @@ int main()
 			employeeDB->showAll();
 #endif // HEAP
 			break;
-		case 5:
+		case 6:
 			clear();
 #ifdef STACK
 			employeeDB.showCurrent();
@@ -79,7 +88,7 @@ int main()
 			employeeDB->showCurrent();
 #endif // HEAP
 			break;
-		case 6:
+		case 7:
 			clear();
 #ifdef STACK
 			employeeDB.showFormer();
@@ -89,7 +98,7 @@ int main()
 			employeeDB->showFormer();
 #endif // HEAP	
 			break;
-		case 7:
+		case 8:
 #ifdef STACK
 			edit(employeeDB);
 #endif // STACK
@@ -123,10 +132,11 @@ int displayMenu()
 	std::cout << "1) Hire a new employee" << std::endl;
 	std::cout << "2) Fire an employee" << std::endl;
 	std::cout << "3) Promote an employee" << std::endl;
-	std::cout << "4) List all employees" << std::endl;
-	std::cout << "5) List all current employees" << std::endl;
-	std::cout << "6) List all previous employees" << std::endl;
-	std::cout << "7) Edit employee record" << std::endl;
+	std::cout << "4) Demote an employee" << std::endl;
+	std::cout << "5) List all employees" << std::endl;
+	std::cout << "6) List all current employees" << std::endl;
+	std::cout << "7) List all previous employees" << std::endl;
+	std::cout << "8) Edit employee record" << std::endl;
 	std::cout << "0) Quit" << std::endl;
 	std::cout << std::endl;
 
