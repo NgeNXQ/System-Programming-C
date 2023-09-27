@@ -19,7 +19,7 @@ namespace LibraryDatabase
 		void showFormer();
 
 	private:
-		static const int CAPACITY = 100;
+		static const int CAPACITY = 50;
 		int index;
 
 #ifdef STACK

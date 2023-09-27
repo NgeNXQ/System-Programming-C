@@ -60,7 +60,7 @@ namespace LibraryDatabase
 				  << "ID: " << this->getId() << std::endl
 				  << (this->isHired ? "Current employee" : "Former employee") << std::endl
 				  << "Salary: $" << this->getSalary() << std::endl
-				  << "Position ID: " << this->getId() << std::endl
+				  << "Position ID: " << (int)this->getPosition() << std::endl
 				  << "Passport ID: " << this->getPassportId() << std::endl
 				  << "Address: " << this->getAddress() << std::endl << std::endl;
 	}
