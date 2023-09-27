@@ -9,7 +9,7 @@ TARGET = labwork1
 SRCS = main.cpp Employee.cpp Database.cpp
 
 # Header files
-HDRS = Employee.h Database.h
+HDRS = Employee.h Database.h, Flags.h
 
 # Object files
 OBJS = $(SRCS:.cpp=.o)
