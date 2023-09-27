@@ -3,6 +3,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
+#include <limits>
 
 using namespace LibraryDatabase;
 
