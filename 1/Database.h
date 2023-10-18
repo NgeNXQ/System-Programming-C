@@ -31,7 +31,7 @@ namespace LibraryDatabase
 
 #ifdef HEAP
 		Employee** employees;
-#endif //HEAP	
+#endif //HEAP
 	};
 }
 
