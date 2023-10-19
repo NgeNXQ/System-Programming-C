@@ -263,10 +263,11 @@ void edit(Database& inDB)
 
 int readIntInput(const std::string& inputInvitation, int min, int max)
 {
+	std::string userInput;
+
 	while (true) 
 	{
 		std::cout << inputInvitation;
-		std::string userInput;
 		std::cin >> userInput;
 
 		if (!userInput.empty() &&

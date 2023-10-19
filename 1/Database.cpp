@@ -10,6 +10,10 @@ namespace LibraryDatabase
 	Database::Database()
 	{
 		this->index = 0;
+
+#ifdef HEAP
+		employees = new Employee*[CAPACITY];
+#endif
 	}
 
 	Database::~Database()
@@ -17,6 +21,8 @@ namespace LibraryDatabase
 #ifdef HEAP
 		for (int i = 0; i < index; ++i)
 			delete employees[i];
+
+		delete[] employees;
 #endif
 	}
 

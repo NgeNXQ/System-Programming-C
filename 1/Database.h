@@ -1,3 +1,6 @@
+#ifndef DATABASE_H
+#define DATABASE_H
+
 #include "Flags.h"
 #include "Employee.h"
 
@@ -27,7 +30,9 @@ namespace LibraryDatabase
 #endif //STACK
 
 #ifdef HEAP
-		Employee* employees[CAPACITY];
-#endif //HEAP	
+		Employee** employees;
+#endif //HEAP
 	};
 }
+
+#endif // DATABASE_H
