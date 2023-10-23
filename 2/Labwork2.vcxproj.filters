@@ -15,21 +15,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-<<<<<<< Updated upstream
-=======
     <ClCompile Include="Database.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Employee.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
->>>>>>> Stashed changes
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
-<<<<<<< Updated upstream
-=======
   <ItemGroup>
     <ClInclude Include="Database.h">
       <Filter>Header Files</Filter>
@@ -41,5 +36,4 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
->>>>>>> Stashed changes
 </Project>
