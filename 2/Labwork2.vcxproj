@@ -22,6 +22,7 @@
     <ClCompile Include="Database.cpp" />
     <ClCompile Include="Employee.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="UserInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Database.h" />

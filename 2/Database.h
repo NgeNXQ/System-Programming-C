@@ -9,17 +9,17 @@ namespace LibraryDatabase
 	class Database
 	{
 	public:
-		Database();
-		~Database();
+		Database(void);
+		~Database(void);
 
-		Employee& addEmployee(std::string firstName, std::string middleName, std::string lastName, Employee::Position position);
+		Employee& addEmployee(const std::string& firstName, const std::string& middleName, const std::string& lastName, const Employee::Position position);
 
-		Employee& getEmployee(int id);
-		Employee& getEmployee(std::string firstName, std::string middleName, std::string lastName);
+		Employee& getEmployee(const int id);
+		Employee& getEmployee(const std::string& firstName, const std::string& middleName, const std::string& lastName);
 
-		void showAll();
-		void showCurrent();
-		void showFormer();
+		void showAll(void);
+		void showCurrent(void);
+		void showFormer(void);
 
 	private:
 		static const int CAPACITY = 50;

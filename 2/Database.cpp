@@ -7,7 +7,7 @@
 
 namespace LibraryDatabase
 {
-	Database::Database()
+	Database::Database(void)
 	{
 		this->index = 0;
 
@@ -16,7 +16,7 @@ namespace LibraryDatabase
 #endif
 	}
 
-	Database::~Database()
+	Database::~Database(void)
 	{
 #ifdef HEAP
 		for (int i = 0; i < index; ++i)
@@ -26,7 +26,7 @@ namespace LibraryDatabase
 #endif
 	}
 
-	Employee& Database::addEmployee(std::string firstName, std::string middleName, std::string lastName, Employee::Position position)
+	Employee& Database::addEmployee(const std::string& firstName, const std::string& middleName, const std::string& lastName, const Employee::Position position)
 	{
 		if (this->index < this->CAPACITY)
 		{
@@ -56,7 +56,7 @@ namespace LibraryDatabase
 		throw std::exception();
 	}
 
-	Employee& Database::getEmployee(int employeeId)
+	Employee& Database::getEmployee(const int employeeId)
 	{
 		for (int i = 0; i < index; ++i) 
 		{
@@ -76,7 +76,7 @@ namespace LibraryDatabase
 		throw std::exception();
 	}
 
-	Employee& Database::getEmployee(std::string firstName, std::string middleName, std::string lastName)
+	Employee& Database::getEmployee(const std::string& firstName, const std::string& middleName, const std::string& lastName)
 	{
 		for (int i = 0; i < index; ++i) 
 		{
@@ -96,7 +96,7 @@ namespace LibraryDatabase
 		throw std::exception();
 	}
 
-	void Database::showAll()
+	void Database::showAll(void)
 	{
 		for (int i = 0; i < this->index; ++i)
 		{
@@ -110,7 +110,7 @@ namespace LibraryDatabase
 		}		
 	}
 
-	void Database::showCurrent()
+	void Database::showCurrent(void)
 	{
 		for (int i = 0; i < this->index; ++i)
 		{
@@ -127,7 +127,7 @@ namespace LibraryDatabase
 		}
 	}
 
-	void Database::showFormer()
+	void Database::showFormer(void)
 	{
 		for (int i = 0; i < this->index; ++i)
 		{

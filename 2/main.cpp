@@ -7,16 +7,16 @@
 
 using namespace LibraryDatabase;
 
-void clear();
-int displayMenu();
+void clear(void);
+int displayMenu(void);
 void hire(Database&);
 void fire(Database&);
 void edit(Database&);
 void demote(Database&);
 void promote(Database&);
-int readIntInput(const std::string&, int, int);
+int readIntInput(const std::string&, const int, const int);
 
-int main()
+int main(void)
 {
 #ifdef STACK
 	Database employeeDB;
@@ -146,7 +146,7 @@ int displayMenu()
 	return choice;
 }
 
-void hire(Database& inDB)
+void hire(Database& const database)
 {
 	std::string firstName;
 	std::string middleName;
@@ -159,12 +159,12 @@ void hire(Database& inDB)
 	std::cout << "Middle name: ";
 	std::cin >> middleName;
 
-	unsigned char positionId = readIntInput("Employee position: ", 1, 7);
+	const unsigned char positionId = readIntInput("Employee position: ", 1, 7);
 
 	try 
 	{
 		clear();
-		inDB.addEmployee(firstName, middleName, lastName, (Employee::Position)positionId);
+		database.addEmployee(firstName, middleName, lastName, (Employee::Position)positionId);
 		std::cout << "Employee has been added." << std::endl;
 	}
 	catch (std::exception ex) 
@@ -173,14 +173,14 @@ void hire(Database& inDB)
 	}
 }
 
-void fire(Database& inDB)
+void fire(Database& database)
 {
 	int employeeNumber = readIntInput("Employee number: ", 1, std::numeric_limits<int>::max());
 
 	try 
 	{
 		clear();
-		inDB.getEmployee(employeeNumber).fire();
+		database.getEmployee(employeeNumber).fire();
 		std::cout << "Employee " << employeeNumber << " has been terminated." << std::endl;
 	}
 	catch (std::exception ex) 
@@ -189,7 +189,7 @@ void fire(Database& inDB)
 	}
 }
 
-void promote(Database& inDB)
+void promote(Database& database)
 {
 	int employeeNumber = readIntInput("Employee number: ", 1, std::numeric_limits<int>::max());
 	int raiseAmount = readIntInput("How much of a raise: ", 0, std::numeric_limits<int>::max());
@@ -197,7 +197,7 @@ void promote(Database& inDB)
 	try 
 	{
 		clear();
-		inDB.getEmployee(employeeNumber).promote(raiseAmount);
+		database.getEmployee(employeeNumber).promote(raiseAmount);
 		std::cout << "Employee has been promoted." << std::endl;
 	}
 	catch (std::exception ex)
@@ -206,7 +206,7 @@ void promote(Database& inDB)
 	}
 }
 
-void demote(Database& inDB)
+void demote(Database& database)
 {
 	int employeeNumber = readIntInput("Employee number: ", 1, std::numeric_limits<int>::max());
 	int reduceAmount = readIntInput("How much of a reduce: ", 0, std::numeric_limits<int>::max());
@@ -214,7 +214,7 @@ void demote(Database& inDB)
 	try
 	{
 		clear();
-		inDB.getEmployee(employeeNumber).demote(reduceAmount);
+		database.getEmployee(employeeNumber).demote(reduceAmount);
 		std::cout << "Employee has been demoted." << std::endl;
 	}
 	catch (std::exception ex)
@@ -223,34 +223,34 @@ void demote(Database& inDB)
 	}
 }
 
-void edit(Database& inDB) 
+void edit(Database& database) 
 {
 	int employeeNumber = readIntInput("Employee number: ", 1, std::numeric_limits<int>::max());
 
 	try
 	{
-		Employee& emp = inDB.getEmployee(employeeNumber);
+		Employee& employee = database.getEmployee(employeeNumber);
 
-		int age = readIntInput("Employee age: ", 18, 100);
-		emp.setAge(age);
+		const int age = readIntInput("Employee age: ", 18, 100);
+		employee.setAge(age);
 
-		unsigned char sex = readIntInput("Employee sex? Enter 0 for Male, 1 for Female: ", 0, 1);
-		emp.setSex((Employee::Sex)sex);
+		const unsigned char sex = readIntInput("Employee sex? Enter 0 for Male, 1 for Female: ", 0, 1);
+		employee.setSex((Employee::Sex)sex);
 
-		int passportId = readIntInput("Employee passport ID: ", 0, std::numeric_limits<int>::max());
-		emp.setPassportId(passportId);
+		const int passportId = readIntInput("Employee passport ID: ", 0, std::numeric_limits<int>::max());
+		employee.setPassportId(passportId);
 
 		std::string address;
 		std::cout << "Employee address: ";
 		std::cin.ignore();
 		std::getline(std::cin, address);
-		emp.setAddress(address);
+		employee.setAddress(address);
 
-		unsigned char positionId = readIntInput("Employee position: ", 1, 7);
-		emp.setPosition((Employee::Position)positionId);
+		const unsigned char positionId = readIntInput("Employee position: ", 1, 7);
+		employee.setPosition((Employee::Position)positionId);
 
-		int salary = readIntInput("Employee salary: ", 0, std::numeric_limits<int>::max());
-		emp.setSalary(salary);
+		const int salary = readIntInput("Employee salary: ", 0, std::numeric_limits<int>::max());
+		employee.setSalary(salary);
 
 		clear();
 		std::cout << "Employee has been updated." << std::endl;
@@ -261,8 +261,9 @@ void edit(Database& inDB)
 	}
 }
 
-int readIntInput(const std::string& inputInvitation, int min, int max)
+int readIntInput(const std::string& const inputInvitation, const int min, const int max)
 {
+	int result;
 	std::string userInput;
 
 	while (true) 
@@ -274,7 +275,7 @@ int readIntInput(const std::string& inputInvitation, int min, int max)
 			(userInput[0] == '-' || (userInput[0] >= '0' && userInput[0] <= '9')) &&
 			(userInput.find_first_not_of("0123456789", 1) == std::string::npos))
 		{
-			int result = std::stoi(userInput);
+			result = std::stoi(userInput);
 
 			if (result >= min && result <= max)
 				return result;
@@ -289,7 +290,7 @@ int readIntInput(const std::string& inputInvitation, int min, int max)
 	}
 }
 
-void clear()
+void clear(void)
 {
 #ifdef _WIN32
 	system("cls");

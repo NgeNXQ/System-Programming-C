@@ -28,43 +28,43 @@ namespace LibraryDatabase
 
 		Employee();
 
-		void promote(int raiseAmount);
-		void demote(int reduceAmount);
-		void hire(Position position);
-		void fire();
-		void showInfo();
+		void promote(const int raiseAmount);
+		void demote(const int reduceAmount);
+		void hire(const Employee::Position position);
+		void fire(void);
+		void showInfo(void);
 
-		int getId();
-		void setId(int id);
+		int getId(void);
+		void setId(const int id);
 
-		std::string getFirstName();
-		void setFirstName(std::string firstName);
+		std::string getFirstName(void);
+		void setFirstName(const std::string& firstName);
 
-		std::string getMiddleName();
-		void setMiddleName(std::string middleName);
+		std::string getMiddleName(void);
+		void setMiddleName(const std::string& middleName);
 		
-		std::string getLastName();
-		void setLastName(std::string lastName);
+		std::string getLastName(void);
+		void setLastName(const std::string& lastName);
 		
-		int getAge();
-		void setAge(int age);
+		int getAge(void);
+		void setAge(const int age);
 		
-		Sex getSex();
-		void setSex(Sex sex);
+		Sex getSex(void);
+		void setSex(const Employee::Sex sex);
 
-		int getPassportId();
-		void setPassportId(int passportId);
+		int getPassportId(void);
+		void setPassportId(const int passportId);
 
-		std::string getAddress();
-		void setAddress(std::string address);
+		std::string getAddress(void);
+		void setAddress(const std::string& address);
 
-		Position getPosition();
-		void setPosition(Position position);
+		Position getPosition(void);
+		void setPosition(const Employee::Position position);
 
-		int getSalary();
-		void setSalary(int newSalary);
+		int getSalary(void);
+		void setSalary(const int newSalary);
 
-		bool getIsHired();
+		bool getIsHired(void);
 
 	private:
 		int id;
