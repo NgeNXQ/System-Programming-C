@@ -2,35 +2,40 @@
 #define DATABASE_H
 
 #include "Flags.h"
-#include "Employee.h"
 
 namespace LibraryDatabase 
 {
+	template <typename T>
 	class Database
 	{
 	public:
-		Database(void);
-		~Database(void);
+		//Database(void);
+		//~Database(void);
 
-		Employee& addEmployee(const std::string& firstName, const std::string& middleName, const std::string& lastName, const Employee::Position position);
+		enum class Operation: unsigned char
+		{
+			HIRE,
+			FIRE,
+			EDIT,
+			DEMOTE,
+			PROMOTE
+		};
 
-		Employee& getEmployee(const int id);
-		Employee& getEmployee(const std::string& firstName, const std::string& middleName, const std::string& lastName);
-
-		void showAll(void);
-		void showCurrent(void);
-		void showFormer(void);
+		//T& getRecord(const int);
+		//void addRecord(T* const);
+		//void printRecords(bool(*condition)(const T&));
+		//void performOperation(const int, const Database::Operation);
 
 	private:
 		static const int CAPACITY = 50;
 		int index;
 
 #ifdef STACK
-		Employee employees[CAPACITY];
+		T records[CAPACITY];
 #endif //STACK
 
 #ifdef HEAP
-		Employee** employees;
+		T** records;
 #endif //HEAP
 	};
 }

@@ -3,7 +3,7 @@ CXX = g++
 CXXFLAGS = -std=c++11 -Wall
 
 # Target executable
-TARGET = labwork1
+TARGET = labwork2
 
 # Source files
 SRCS = main.cpp Employee.cpp Database.cpp
@@ -28,5 +28,4 @@ $(TARGET): $(OBJS)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 # Clean up the object files and the executable
-clean:
-	rm -f $(OBJS) $(TARGET)
+clean: rm -f $(OBJS) $(TARGET)

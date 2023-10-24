@@ -18,17 +18,13 @@ namespace LibraryDatabase
 		this->isHired = false;
 	}
 
-	void Employee::promote(const int raiseAmount = 100)
-	{
-		this->setSalary(this->getSalary() + raiseAmount);
-	}
+	//void hire(void);
+	//void fire(void);
+	//void demote(void);
+	//void promote(void);
+	//void showInfo(void);
 
-	void Employee::demote(const int reduceAmount = 100)
-	{
-		this->setSalary(this->getSalary() - reduceAmount);
-	}
-
-	void Employee::hire(const Employee::Position position)
+	void Employee::hire(void)
 	{
 		if (this->isHired)
 		{
@@ -38,6 +34,18 @@ namespace LibraryDatabase
 
 		this->isHired = true;
 		this->position = position;
+	}
+
+	void Employee::promote(void)
+	{
+		int raiseAmount = 05;
+		this->setSalary(this->getSalary() + raiseAmount);
+	}
+
+	void Employee::demote(void)
+	{
+		int reduceAmount = 05;
+		this->setSalary(this->getSalary() - reduceAmount);
 	}
 
 	void Employee::fire(void)
@@ -135,7 +143,7 @@ namespace LibraryDatabase
 		return this->sex;
 	}
 
-	void Employee::setSex(const Employee::Sex const sex)
+	void Employee::setSex(const Employee::Sex sex)
 	{
 		this->sex = sex;
 	}

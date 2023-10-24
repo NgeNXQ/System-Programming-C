@@ -20,12 +20,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Database.cpp" />
+    <ClCompile Include="DatabaseAPI.cpp" />
     <ClCompile Include="Employee.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="UserInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Database.h" />
+    <ClInclude Include="DatabaseAPI.h" />
     <ClInclude Include="Employee.h" />
     <ClInclude Include="Flags.h" />
   </ItemGroup>

@@ -28,41 +28,41 @@ namespace LibraryDatabase
 
 		Employee();
 
-		void promote(const int raiseAmount);
-		void demote(const int reduceAmount);
-		void hire(const Employee::Position position);
+		void hire(void);
 		void fire(void);
+		void demote(void);
+		void promote(void);
 		void showInfo(void);
 
 		int getId(void);
-		void setId(const int id);
+		void setId(const int);
 
 		std::string getFirstName(void);
-		void setFirstName(const std::string& firstName);
+		void setFirstName(const std::string&);
 
 		std::string getMiddleName(void);
-		void setMiddleName(const std::string& middleName);
+		void setMiddleName(const std::string&);
 		
 		std::string getLastName(void);
-		void setLastName(const std::string& lastName);
+		void setLastName(const std::string&);
 		
 		int getAge(void);
-		void setAge(const int age);
+		void setAge(const int);
 		
 		Sex getSex(void);
-		void setSex(const Employee::Sex sex);
+		void setSex(const Employee::Sex);
 
 		int getPassportId(void);
-		void setPassportId(const int passportId);
+		void setPassportId(const int);
 
 		std::string getAddress(void);
-		void setAddress(const std::string& address);
+		void setAddress(const std::string&);
 
 		Position getPosition(void);
-		void setPosition(const Employee::Position position);
+		void setPosition(const Employee::Position);
 
 		int getSalary(void);
-		void setSalary(const int newSalary);
+		void setSalary(const int);
 
 		bool getIsHired(void);
 
