@@ -1,30 +1,34 @@
-﻿#include "Employee.h"
-#include <stdexcept>
+﻿#include <stdexcept>
 #include <iostream>
 #include <string>
+#include "Employee.h"
 
-namespace LibraryDatabase 
+namespace DatabaseImplementation
 {
-	Employee::Employee(void)
+	Employee::Employee()
 	{
+		this->age = -1;
+		this->salary = 0;
+		this->address = "";
+		this->lastName = "";
 		this->firstName = "";
 		this->middleName = "";
-		this->lastName = "";
-		this->age = -1;
-		this->passportId = -1;
-		this->address = "";
-		this->position = Position::Undefined;
-		this->salary = 0;
 		this->isHired = false;
+		this->passportId = 0;
+		this->position = Position::Undefined;
 	}
 
-	//void hire(void);
-	//void fire(void);
-	//void demote(void);
-	//void promote(void);
-	//void showInfo(void);
+	void Employee::promote(const int raiseAmount = 100)
+	{
+		this->setSalary(this->getSalary() + raiseAmount);
+	}
 
-	void Employee::hire(void)
+	void Employee::demote(const int reduceAmount = 100)
+	{
+		this->setSalary(this->getSalary() - reduceAmount);
+	}
+
+	void Employee::hire(const Employee::Position position)
 	{
 		if (this->isHired)
 		{
@@ -34,18 +38,6 @@ namespace LibraryDatabase
 
 		this->isHired = true;
 		this->position = position;
-	}
-
-	void Employee::promote(void)
-	{
-		int raiseAmount = 05;
-		this->setSalary(this->getSalary() + raiseAmount);
-	}
-
-	void Employee::demote(void)
-	{
-		int reduceAmount = 05;
-		this->setSalary(this->getSalary() - reduceAmount);
 	}
 
 	void Employee::fire(void)
@@ -61,19 +53,19 @@ namespace LibraryDatabase
 		this->position = Employee::Position::Undefined;
 	}
 
-	void Employee::showInfo(void)
+	void Employee::showInfo(void) const
 	{
 		std::cout << "Employee: " << this->getLastName() << ' ' << this->getFirstName() << ' ' << this->getMiddleName() << std::endl
-				  << "Age: " << this->getAge() << std::endl
-				  << "ID: " << this->getId() << std::endl
-				  << (this->isHired ? "Current employee" : "Former employee") << std::endl
-				  << "Salary: $" << this->getSalary() << std::endl
-				  << "Position ID: " << (int)this->getPosition() << std::endl
-				  << "Passport ID: " << this->getPassportId() << std::endl
-				  << "Address: " << this->getAddress() << std::endl << std::endl;
+					<< "Age: " << this->getAge() << std::endl
+					<< "ID: " << this->getId() << std::endl
+					<< (this->isHired ? "Current employee" : "Former employee") << std::endl
+					<< "Salary: $" << this->getSalary() << std::endl
+					<< "Position ID: " << (int)this->getPosition() << std::endl
+					<< "Passport ID: " << this->getPassportId() << std::endl
+					<< "Address: " << this->getAddress() << std::endl << std::endl;
 	}
 
-	int Employee::getId(void)
+	int Employee::getId(void) const
 	{
 		return this->id;
 	}
@@ -81,12 +73,17 @@ namespace LibraryDatabase
 	void Employee::setId(const int id)
 	{
 		if (id > 0)
+		{
 			this->id = id;
+		}
 		else
-			std::cout << "Invalid input value. Age must be greater than 0." << std::endl;
+		{
+			std::cerr << "Invalid input value. ID must be greater than 0." << std::endl;
+			throw std::exception();
+		}
 	}
 
-	std::string Employee::getFirstName(void) 
+	std::string Employee::getFirstName(void) const 
 	{
 		return this->firstName;
 	}
@@ -94,12 +91,17 @@ namespace LibraryDatabase
 	void Employee::setFirstName(const std::string& firstName)
 	{
 		if (!firstName.empty())
+		{
 			this->firstName = firstName;
+		}
 		else
-			std::cout << "Invalid input value. The string must contain at least one character." << std::endl;
+		{
+			std::cerr << "Invalid input value. The string must contain at least one character." << std::endl;
+			throw std::exception();
+		}
 	}
 
-	std::string Employee::getMiddleName(void)
+	std::string Employee::getMiddleName(void) const
 	{
 		return this->middleName;
 	}
@@ -107,12 +109,17 @@ namespace LibraryDatabase
 	void Employee::setMiddleName(const std::string& middleName)
 	{
 		if (!middleName.empty())
+		{
 			this->middleName = middleName;
+		}
 		else
-			std::cout << "Invalid input value. The string must contain at least one character." << std::endl;
+		{
+			std::cerr << "Invalid input value. The string must contain at least one character." << std::endl;
+			throw std::exception();
+		}
 	}
 
-	std::string Employee::getLastName(void)
+	std::string Employee::getLastName(void) const
 	{
 		return this->lastName;
 	}
@@ -120,12 +127,17 @@ namespace LibraryDatabase
 	void Employee::setLastName(const std::string& lastName)
 	{
 		if (!lastName.empty())
+		{
 			this->lastName = lastName;
+		}
 		else
-			std::cout << "Invalid input value. The string must contain at least one character." << std::endl;
+		{
+			std::cerr << "Invalid input value. The string must contain at least one character." << std::endl;
+			throw std::exception();
+		}
 	}
 
-	int Employee::getAge(void)
+	int Employee::getAge(void) const
 	{
 		return this->age;
 	}
@@ -133,12 +145,17 @@ namespace LibraryDatabase
 	void Employee::setAge(const int age)
 	{
 		if (age > 0)
+		{
 			this->age = age;
+		}	
 		else
-			std::cout << "Invalid input value. Age must be greater than 0." << std::endl;
+		{
+			std::cerr << "Invalid input value. Age must be greater than 0." << std::endl;
+			throw std::exception();
+		}
 	}
 
-	Employee::Sex Employee::getSex(void)
+	Employee::Sex Employee::getSex(void) const
 	{
 		return this->sex;
 	}
@@ -148,7 +165,7 @@ namespace LibraryDatabase
 		this->sex = sex;
 	}
 
-	int Employee::getPassportId(void)
+	int Employee::getPassportId(void) const
 	{
 		return this->passportId;
 	}
@@ -158,7 +175,7 @@ namespace LibraryDatabase
 		this->passportId = passportId;
 	}
 
-	std::string Employee::getAddress(void)
+	std::string Employee::getAddress(void) const
 	{
 		return this->address;
 	}
@@ -166,12 +183,17 @@ namespace LibraryDatabase
 	void Employee::setAddress(const std::string& address)
 	{
 		if (!address.empty())
+		{
 			this->address = address;
+		}
 		else
-			std::cout << "Invalid input value. The string must contain at least one character." << std::endl;
+		{
+			std::cerr << "Invalid input value. The string must contain at least one character." << std::endl;
+			throw std::exception();
+		}
 	}
 	
-	Employee::Position Employee::getPosition(void)
+	Employee::Position Employee::getPosition(void) const
 	{
 		return this->position;
 	}
@@ -181,21 +203,39 @@ namespace LibraryDatabase
 		this->position = position;
 	}
 
-	int Employee::getSalary(void)
+	int Employee::getSalary(void) const
 	{
 		return this->salary;
 	}
 
 	void Employee::setSalary(const int newSalary)
 	{
-		if (newSalary > 0)
-			this->salary = newSalary;
+		if (this->isHired)
+		{
+			if (newSalary > 0)
+			{
+				this->salary = newSalary;
+			}
+			else
+			{
+				std::cerr << "Invalid input value. Salary must be greater than or equal to 0." << std::endl;
+				throw std::exception();
+			}
+		}
 		else
-			std::cout << "Invalid input value. Salary must be greater than or equal to 0." << std::endl;
+		{
+			std::cerr << "Employee is terminated!" << std::endl;
+			throw std::exception();
+		}
 	}
 	
-	bool Employee::getIsHired(void)
+	bool Employee::getIsHired(void) const
 	{
 		return this->isHired;
+	}
+
+	void Employee::setIsHired(bool isHired)
+	{
+		this->isHired = isHired;
 	}
 }

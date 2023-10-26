@@ -1,128 +1,140 @@
 #include <iostream>
 #include <stdexcept>
+#include <string>
 #include "Flags.h"
 #include "Database.h"
+#include "Employee.h"
 
-namespace LibraryDatabase
+namespace DatabaseImplementation
 {
-	//template <typename T>
-	//Database<T>::Database(void)
-	//{
-//		this->index = 0;
-//
-//#ifdef HEAP
-//		records = new T*[CAPACITY];
-//#endif // HEAP
-//
-//		for (int i = 0; i < CAPACITY; ++i)
-//			records[i] = nullptr;
+	Database::Database()
+	{
+		this->index = 0;
 
-		/*static_assert(std::is_member_function_pointer<decltype(&T::hire)>::value, "T does not have a hire member function");
-		static_assert(std::is_member_function_pointer<decltype(&T::fire)>::value, "T does not have a fire member function");
-		static_assert(std::is_member_function_pointer<decltype(&T::edit)>::value, "T does not have a edit member function");
-		static_assert(std::is_member_function_pointer<decltype(&T::getId)>::value, "T does not have a getId member function");
-		static_assert(std::is_member_function_pointer<decltype(&T::setId)>::value, "T does not have a setId member function");
-		static_assert(std::is_member_function_pointer<decltype(&T::demote)>::value, "T does not have a demote member function");
-		static_assert(std::is_member_function_pointer<decltype(&T::promote)>::value, "T does not have a promote member function");
-		static_assert(std::is_member_function_pointer<decltype(&T::showInfo)>::value, "T does not have a showInfo member function");*/
-	//}
+#ifdef HEAP
+		employees = new Employee*[CAPACITY];
+#endif
+	}
 
-	//template <typename T>
-	//Database<T>::~Database(void)
-	//{
-//#ifdef HEAP
-//		for (int i = 0; i < index; ++i)
-//			delete records[i];
-//
-//		delete[] records;
-//#endif // HEAP
-	//}
+#ifdef HEAP
 
-	//template <typename T>
-	//T& Database<T>::getRecord(const int id)
-//	{
-//		for (int i = 0; i < index; ++i)
-//		{
-//#ifdef STACK
-//			if (this->records[i].getId() == id)
-//				return this->records[i];
-//#endif // STACK
-//
-//#ifdef HEAP
-//			if (this->records[i]->getId() == id)
-//				return *(this->records[i]);
-//#endif // STACK
-//
-//		}
-//
-//		std::cerr << "No record with specified id." << id << std::endl;
-//		throw std::exception();
-//	}
+	Database::~Database()
+	{
+		for (int i = 0; i < index; ++i)
+			delete employees[i];
 
-	//template <typename T>
-	//void Database<T>::addRecord(T* const newRecord)
-//	{
-//		if (newRecord == nullptr)
-//		{
-//			std::cerr << "newRecord is NULL." << std::endl;
-//			throw std::exception();
-//		}
-//
-//		if (this->index < CAPACITY)
-//		{
-//#ifdef STACK
-//			this->records[this->index] = *newRecord;
-//#endif // STACK
-//
-//#ifdef HEAP
-//			this->records[this->index] = newRecord;
-//#endif // HEAP
-//
-//			newRecord->setId(this->index++);
-//		}
-//		else
-//		{
-//			std::cerr << "There is no more room to add the new record!" << std::endl;
-//			throw std::exception();
-//		}
-//	}
+		delete[] employees;
+	}
 
-//	template <typename T>
-//	void Database<T>::printRecords(bool(*condition)(const T&))
-//	{
-		//for (int i = 0; i < index; ++i)
-		//{
-		//	if (condition(this->records[i]))
-		//		this->records[i].showInfo();
-		//}
-//	}
+#endif
 
-//	template <typename T>
-//	void Database<T>::performOperation(const int id, const Database<T>::Operation operation)
-//	{
-		/*if (id < -1 || id > this->index)
+#ifdef STACK
+
+	void Database::add(Employee& newEmployee)
+	{
+		if (this->index + 1 < this->CAPACITY)
 		{
-			std::cerr << "No record with specified id." << id << std::endl;
+			++this->index;
+			newEmployee.setIsHired(1);
+			newEmployee.setId(this->index);
+			this->employees[this->index] = newEmployee;
+		}
+		else
+		{
+			std::cerr << "There is no more room to add the new employee!" << std::endl;
+			throw std::exception();
+		}
+	}
+
+#endif // STACK
+
+#ifdef HEAP
+
+	void Database::add(Employee* const newEmployee)
+	{
+		if (this->index + 1 < this->CAPACITY)
+		{
+			++this->index;
+			newEmployee->setIsHired(1);
+			newEmployee->setId(this->index);
+			this->employees[this->index] = newEmployee;
+		}
+		else
+		{
+			std::cerr << "There is no more room to add the new employee!" << std::endl;
+			throw std::exception();
+		}
+	}
+
+#endif // HEAP
+
+	Employee& Database::get(const int id)
+	{
+		if (this->index == 0 || id > this->index)
+		{
+			std::cerr << "Wrong employee ID!" << std::endl;
 			throw std::exception();
 		}
 
-		switch(operation)
+		for (int i = 1; i <= this->index; ++i)
 		{
-			case Database<T>::Operation.HIRE:
-				this->records[id].hire();
-				break;
-			case Database<T>::Operation.FIRE:
-				this->records[id].fire();
-				break;
-			case Database<T>::Operation.EDIT:
-				this->records[id].edit();
-				break;
-			case Database<T>::Operation.DEMOTE:
-				this->records[id].demote();
-				break;
-			case Database<T>::Operation.PROMOTE:
-				this->records[id].promote();
-				break;
-		}*/
-//	}
+#ifdef STACK
+			if (this->employees[i].getId() == id)
+				return this->employees[i];
+#endif // STACK
+
+#ifdef HEAP
+			if (this->employees[i]->getId() == id)
+				return *(this->employees[i]);
+#endif // HEAP	
+		}
+	}
+
+	void Database::showAll(void) const
+	{
+		for (int i = 1; i <= this->index; ++i)
+		{
+#ifdef STACK
+			this->employees[i].showInfo();
+#endif // STACK
+
+#ifdef HEAP
+			this->employees[i]->showInfo();
+#endif // STACK
+		}
+	}
+
+	void Database::showCurrent(void) const
+	{
+		for (int i = 1; i <= this->index; ++i)
+		{
+#ifdef STACK
+			if (this->employees[i].getIsHired())
+				this->employees[i].showInfo();
+#endif // STACK
+
+#ifdef HEAP
+			if (this->employees[i]->getIsHired())
+				this->employees[i]->showInfo();
+#endif // STACK
+
+		}
+	}
+
+	void Database::showFormer(void) const
+	{
+		for (int i = 1; i <= this->index; ++i)
+		{
+#ifdef STACK
+			if (!this->employees[i].getIsHired())
+				this->employees[i].showInfo();
+#endif // STACK
+
+#ifdef HEAP
+			if (!this->employees[i]->getIsHired())
+				this->employees[i]->showInfo();
+#endif // STACK
+
+		}
+	}
 }

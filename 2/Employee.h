@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace LibraryDatabase
+namespace DatabaseImplementation
 {
 	class Employee 
 	{
@@ -26,45 +26,47 @@ namespace LibraryDatabase
 			Cleaner
 		};
 
-		Employee();
+		Employee(void);
 
-		void hire(void);
 		void fire(void);
-		void demote(void);
-		void promote(void);
-		void showInfo(void);
+		void demote(const int);
+		void promote(const int);
+		void showInfo(void) const;
+		void hire(const Employee::Position);
 
-		int getId(void);
-		void setId(const int);
+		int getId(void) const;
+		void setId(const int id);
 
-		std::string getFirstName(void);
+		std::string getFirstName(void) const;
 		void setFirstName(const std::string&);
 
-		std::string getMiddleName(void);
+		std::string getMiddleName(void) const;
 		void setMiddleName(const std::string&);
 		
-		std::string getLastName(void);
+		std::string getLastName(void) const;
 		void setLastName(const std::string&);
 		
-		int getAge(void);
+		int getAge(void) const;
 		void setAge(const int);
 		
-		Sex getSex(void);
+		Sex getSex(void) const;
 		void setSex(const Employee::Sex);
 
-		int getPassportId(void);
+		int getPassportId(void) const;
 		void setPassportId(const int);
 
-		std::string getAddress(void);
+		std::string getAddress(void) const;
 		void setAddress(const std::string&);
 
-		Position getPosition(void);
+		Position getPosition(void) const;
 		void setPosition(const Employee::Position);
 
-		int getSalary(void);
+		int getSalary(void) const;
 		void setSalary(const int);
 
-		bool getIsHired(void);
+		void setIsHired(bool);
+		bool getIsHired(void) const;
+
 
 	private:
 		int id;

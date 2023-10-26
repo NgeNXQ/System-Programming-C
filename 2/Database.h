@@ -1,41 +1,45 @@
 #ifndef DATABASE_H
 #define DATABASE_H
 
+#include <string>
 #include "Flags.h"
+#include "Employee.h"
 
-namespace LibraryDatabase 
+namespace DatabaseImplementation
 {
-	template <typename T>
 	class Database
 	{
 	public:
-		//Database(void);
-		//~Database(void);
+		Database();
 
-		enum class Operation: unsigned char
-		{
-			HIRE,
-			FIRE,
-			EDIT,
-			DEMOTE,
-			PROMOTE
-		};
+#ifdef HEAP
+		~Database();
+#endif // HEAP
 
-		//T& getRecord(const int);
-		//void addRecord(T* const);
-		//void printRecords(bool(*condition)(const T&));
-		//void performOperation(const int, const Database::Operation);
+#ifdef STACK
+		void add(Employee&);
+#endif // STACK
+
+#ifdef HEAP
+		void add(Employee* const);
+#endif // HEAP
+
+		Employee& get(const int);
+
+		void showAll(void) const;
+		void showFormer(void) const;
+		void showCurrent(void) const;
 
 	private:
 		static const int CAPACITY = 50;
 		int index;
 
 #ifdef STACK
-		T records[CAPACITY];
+		Employee employees[CAPACITY];
 #endif //STACK
 
 #ifdef HEAP
-		T** records;
+		Employee** employees;
 #endif //HEAP
 	};
 }
