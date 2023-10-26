@@ -1,37 +1,27 @@
-CXX = g++
-CXXFLAGS = -Wall -std=c++11 -fPIC
-LDFLAGS = -L. -lmylibrary
+CXX := g++
+CXXFLAGS := -Wall -std=c++11
 
-# List of source files
-SRC = Database.cpp DatabaseIO.cpp Employee.cpp main.cpp
+LIB_DIR := /usr/local/lib64
 
-# Object files
-OBJ = $(SRC:.cpp=.o)
+SOURCES := Database.cpp DatabaseIO.cpp Employee.cpp
+OBJS := $(SOURCES:.cpp=.o)
 
-# The name of your dynamic library
-LIBRARY = libmylibrary.so
+LIB_NAME := liblabwork2dynamic.so
+LDFLAGS := -shared
 
-# The name of the final executable
-EXECUTABLE = labwork2
+EXECUTABLE := labwork2
 
-.PHONY: all clean
+all: $(LIB_NAME) $(EXECUTABLE)
 
-all: $(LIBRARY) $(EXECUTABLE)
+$(LIB_NAME): $(OBJS)
+	$(CXX) $(LDFLAGS) -o $(LIB_NAME) $(OBJS)
+	mv $(LIB_NAME) $(LIB_DIR)
 
-$(LIBRARY): $(OBJ)
-	$(CXX) -shared -o $(LIBRARY) $(OBJ)
-
-$(EXECUTABLE): $(LIBRARY) $(OBJ)
-	$(CXX) $(CXXFLAGS) -o $(EXECUTABLE) main.cpp $(LDFLAGS)
+$(EXECUTABLE): main.o $(LIB_NAME)
+	$(CXX) main.o -o $(EXECUTABLE) -L$(LIB_DIR) -llabwork2dynamic
 
 %.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-# Copy the shared library to the program's directory
-copy_library:
-	cp $(LIBRARY) $(EXECUTABLE)
+	$(CXX) $(CXXFLAGS) -fPIC -c $< -o $@
 
 clean:
-	rm -f $(LIBRARY) $(OBJ) $(EXECUTABLE)
-
-.PHONY: copy_library
+	rm -f $(OBJS) $(LIB_DIR)/$(LIB_NAME) $(EXECUTABLE)

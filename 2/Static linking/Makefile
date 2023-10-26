@@ -1,20 +1,14 @@
 CXX = g++
 CXXFLAGS = -Wall -std=c++11
-LDFLAGS = -L. -lmylibrary
+LDFLAGS = -L. -llabwork2static
 
-# List of source files
 SRC = Database.cpp DatabaseIO.cpp Employee.cpp main.cpp
 
-# Object files
 OBJ = $(SRC:.cpp=.o)
 
-# The name of your static library
-LIBRARY = libmylibrary.a
+LIBRARY = liblabwork2static.a
 
-# The name of the final executable
 EXECUTABLE = labwork2
-
-.PHONY: all clean
 
 all: $(LIBRARY) $(EXECUTABLE)
 

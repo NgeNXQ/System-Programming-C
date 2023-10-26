@@ -1,7 +1,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
-#include "Flags.h"
+//#include "Flags.h"
 #include "Database.h"
 #include "Employee.h"
 

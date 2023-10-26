@@ -1,4 +1,5 @@
-﻿#include "Database.h"
+﻿#include <iostream>
+#include "Database.h"
 #include "DatabaseIO.h"
 
 using namespace DatabaseImplementation;

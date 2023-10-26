@@ -5,5 +5,3 @@ COPY main.cpp Employee.cpp Database.cpp Employee.h Database.h Flags.h DatabaseIO
 WORKDIR /usr/src/bin
 
 RUN make
-
-CMD [ "./labwork2" ]

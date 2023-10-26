@@ -6,4 +6,4 @@ WORKDIR /usr/src/bin
 
 RUN make
 
-CMD [ "./labwork2" ]
+RUN ldconfig
