@@ -121,7 +121,7 @@ namespace DatabaseImplementation
 		}
 		catch (std::exception ex)
 		{
-			std::cerr << ex.what() << std::endl;
+			std::cout << "Failed to hire an employee." << std::endl;
 		}
 	}
 
@@ -136,12 +136,14 @@ namespace DatabaseImplementation
 		}
 		catch (std::exception ex)
 		{
-			std::cerr << ex.what() << std::endl;
+			std::cout << "Failed to fire an employee." << std::endl;
 		}
 	}
 
 	void DatabaseIO::edit(Database* const database)
 	{
+		clear();
+
 		int employeeNumber = readIntInput("Employee number: ", 1, std::numeric_limits<int>::max());
 
 		try
@@ -173,39 +175,47 @@ namespace DatabaseImplementation
 		}
 		catch (std::exception ex)
 		{
-			std::cerr << ex.what() << std::endl;
+			std::cout << "Failed to edit an employee." << std::endl;
 		}
 	}
 
 	void DatabaseIO::demote(Database* const database)
 	{
 		const int employeeNumber = readIntInput("Employee number: ", 1, std::numeric_limits<int>::max());
-		const int reduceAmount = readIntInput("How much of a reduce: ", 0, std::numeric_limits<int>::max());
-
+		
 		try
 		{
 			clear();
-			database->get(employeeNumber).demote(reduceAmount);
+
+			Employee& employee = database->get(employeeNumber);
+
+			const int reduceAmount = readIntInput("How much of a reduce: ", 0, std::numeric_limits<int>::max());
+
+			employee.demote(reduceAmount);
 		}
 		catch (std::exception ex)
 		{
-			std::cerr << ex.what() << std::endl;
+			std::cout << "Failed to demote an employee." << std::endl;
 		}
 	}
 
 	void DatabaseIO::promote(Database* const database)
 	{
 		const int employeeNumber = readIntInput("Employee number: ", 1, std::numeric_limits<int>::max());
-		const int raiseAmount = readIntInput("How much of a raise: ", 0, std::numeric_limits<int>::max());
-
+		
 		try
 		{
 			clear();
-			database->get(employeeNumber).promote(raiseAmount);
+
+			Employee& employee = database->get(employeeNumber);
+
+			const int raiseAmount = readIntInput("How much of a raise: ", 0, std::numeric_limits<int>::max());
+
+			employee.promote(raiseAmount);
 		}
 		catch (std::exception ex)
 		{
-			std::cerr << ex.what() << std::endl;
+			std::cout << "Failed to promote an employee." << std::endl;
 		}
 	}
 
