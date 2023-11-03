@@ -13,7 +13,10 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
+<<<<<<< Updated upstream
 #include <QtWidgets/QPushButton>
+=======
+>>>>>>> Stashed changes
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QWidget>
 
@@ -23,7 +26,10 @@ class Ui_MainWindow
 {
 public:
     QWidget *centralwidget;
+<<<<<<< Updated upstream
     QPushButton *pushButton;
+=======
+>>>>>>> Stashed changes
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -34,9 +40,12 @@ public:
         MainWindow->resize(800, 600);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
+<<<<<<< Updated upstream
         pushButton = new QPushButton(centralwidget);
         pushButton->setObjectName("pushButton");
         pushButton->setGeometry(QRect(340, 250, 80, 24));
+=======
+>>>>>>> Stashed changes
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
@@ -54,7 +63,10 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
+<<<<<<< Updated upstream
         pushButton->setText(QCoreApplication::translate("MainWindow", "PushButton", nullptr));
+=======
+>>>>>>> Stashed changes
     } // retranslateUi
 
 };
