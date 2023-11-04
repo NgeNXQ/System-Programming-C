@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
@@ -32,6 +33,13 @@ void MainWindow::handleButton()
 {
     outputField->setText(inputField->text());
     inputField->clear();
+>>>>>>> Stashed changes
+=======
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent)
+    , ui(new Ui::MainWindow)
+{
+    ui->setupUi(this);
 >>>>>>> Stashed changes
 }
 

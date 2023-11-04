@@ -3,9 +3,12 @@
 
 #include <QMainWindow>
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
 #include <QLineEdit>
 #include <QTextEdit>
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 QT_BEGIN_NAMESPACE
@@ -23,6 +26,7 @@ public:
 private:
     Ui::MainWindow *ui;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 };
 =======
     QLineEdit *inputField;
@@ -32,5 +36,8 @@ private slots:
     void handleButton();
 };
 
+>>>>>>> Stashed changes
+=======
+};
 >>>>>>> Stashed changes
 #endif // MAINWINDOW_H
