@@ -11,14 +11,10 @@ CONFIG += c++17
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
-    testbuilder.cpp \
-    testquestion.cpp \
     testwindow.cpp
 
 HEADERS += \
     mainwindow.h \
-    testbuilder.h \
-    testquestion.h \
     testwindow.h
 
 FORMS += \

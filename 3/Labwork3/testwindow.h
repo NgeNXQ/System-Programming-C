@@ -44,13 +44,13 @@ private slots:
 
 private:
     Ui::TestWindow* ui;
-    QLabel* labelQuestion;
+    //QLabel* labelQuestion;
     QPushButton* buttonNext;
 
-    int questionIndex;
-    void checkAnswers();
-    void displayQuestion();
-    QVector<TestQuestion> questions;
+    //int questionIndex;
+    //void checkAnswers();
+    //void displayQuestion();
+    //QVector<TestQuestion> questions;
 };
 
 #endif // TESTWINDOW_H

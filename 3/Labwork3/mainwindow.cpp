@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "testwindow.h"
+//#include "testwindow.h"
 
 #include <QPushButton>
 #include <QFileDialog>
@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     this->ui->setupUi(this);
 
-    this->setWindowTitle("Лабораторна робота № 3");
+    this->setWindowTitle("Практикум № 3");
     this->setMinimumSize(MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT);
     this->setMaximumSize(MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT);
 
@@ -41,8 +41,8 @@ void MainWindow::onButtonLoadTestClicked()
     {
         this->hide();
 
-        TestWindow* const testWindow = new TestWindow(this, fileName);
-        testWindow->show();
+        //TestWindow* const testWindow = new TestWindow(this, fileName);
+        //testWindow->show();
         //delete testWindow;
 
     }
