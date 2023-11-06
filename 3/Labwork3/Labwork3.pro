@@ -15,6 +15,7 @@ SOURCES += \
 
 HEADERS += \
     mainwindow.h \
+    testdata.h \
     testwindow.h
 
 FORMS += \

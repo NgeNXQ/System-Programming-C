@@ -1,13 +1,16 @@
-//#include "testwindow.h"
+#include "testwindow.h"
 #include "ui_testwindow.h"
 
 #include <QFile>
-#include <QLabel>
-#include <QIODevice>
-#include <QGroupBox>
-#include <QLayoutItem>
-#include <QPushButton>
+#include <QDialog>
+#include <QCheckBox>
 #include <QMessageBox>
+#include <QVBoxLayout>
+#include <QPushButton>
+
+#include "testdata.h"
+
+TestWindow* TestWindow::instance = nullptr;
 
 TestWindow::TestWindow(QWidget* parent, const QString& filePath) : QDialog(parent), ui(new Ui::TestWindow)
 {
@@ -20,69 +23,149 @@ TestWindow::TestWindow(QWidget* parent, const QString& filePath) : QDialog(paren
     this->setMinimumSize(TEST_WINDOW_WIDTH, TEST_WINDOW_HEIGHT);
     this->setMaximumSize(TEST_WINDOW_WIDTH, TEST_WINDOW_HEIGHT);
 
-    //this->questions = TestFactory::createTestQuestionsFromFile(filePath);
-    //this->displayQuestion();
+    this->labelQuestion = new QLabel(this);
+    this->answersLayout = new QVBoxLayout(this);
+    this->buttonNext = new QPushButton("Next", this);
+
+    this->ui->verticalLayout->addWidget(this->buttonNext);
+    this->ui->verticalLayout->addWidget(this->labelQuestion);
+    this->ui->verticalLayout->addLayout(this->answersLayout);
+
+    this->currentQuestionIndex = 0;
+    this->loadTest(filePath);
+    this->displayQuestion();
+
+    connect(this, &TestWindow::destroyed, this, &TestWindow::deleteInstance);
+    connect(buttonNext, &QPushButton::clicked, this, &TestWindow::onButtonNextClicked);
 }
 
-//void TestWindow::onButtonNextClicked()
-//{
-//    this->checkAnswers();
-//    this->questionIndex++;
+void TestWindow::loadTest(const QString& filePath)
+{
+    QFile file(filePath);
 
-//    if (questionIndex < questions.size())
-//    {
-//        displayQuestion();
-//    }
-//    else
-//    {
-        // All questions answered, show a summary or perform another action.
-//    }
-//}
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        QTextStream inStream(&file);
+        TestData test;
 
-//void TestWindow::displayQuestion()
-//{
-//    if (questionIndex < questions.size())
-//    {
-//        const TestQuestion &currentQuestion = this->questions[questionIndex];
-//        this->labelQuestion->setText(currentQuestion.getQuestionText());
+        while (!inStream.atEnd())
+        {
+            QString line = inStream.readLine().trimmed();
 
-        // Populate checkboxes with answers
- //       QLayoutItem* child;
-//        while ((child = ui->answersLayout->takeAt(0)) != 0)
-//        {
- //           delete child->widget();
- //           delete child;
- //       }
+            if (line.startsWith("[Q]"))
+            {
+                if (!test.questionText.isEmpty())
+                    this->tests.append(test);
 
- //       const QVector<QString> &answers = currentQuestion.getAnswers();
- //       for (int i = 0; i < answers.size(); i++) {
-//            QCheckBox *checkBox = new QCheckBox(answers[i]);
-//            ui->answersLayout->addWidget(checkBox);
-//        }
-//    }
-//}
+                test.questionText = line.mid(3).trimmed();
+                test.correctAnswers.clear();
+                test.incorrectAnswers.clear();
 
-//void MainWindow::checkAnswers()
-//{
-//    if (currentQuestionIndex < questions.size()) {
-//        const TestQuestion &currentQuestion = questions[currentQuestionIndex];
-//        const QVector<bool> &correctAnswers = currentQuestion.getCorrectAnswers();
-//       QVector<bool> userAnswers;
-//        QList<QCheckBox*> checkBoxes = ui->answersGroup->findChildren<QCheckBox*>();
-//
-//        for (int i = 0; i < checkBoxes.size(); i++) {
-//            userAnswers.append(checkBoxes[i]->isChecked());
-//        }
-//
- //       if (correctAnswers == userAnswers) {
-//            // Correct answer logic here
-//        } else {
- //           // Incorrect answer logic here
- //       }
- //   }
-//}
+            }
+            else if (line.startsWith("[C]"))
+            {
+                test.correctAnswers.append(line.mid(3).trimmed());
+            }
+            else if (line.startsWith("[I]"))
+            {
+                test.incorrectAnswers.append(line.mid(3).trimmed());
+            }
+        }
+
+        if (!test.questionText.isEmpty())
+            tests.append(test);
+
+        file.close();
+    }
+}
+
+void TestWindow::displayQuestion()
+{
+    if (currentQuestionIndex < this->tests.size())
+    {
+        const TestData& currentQuestion = this->tests.at(currentQuestionIndex);
+        this->labelQuestion->setText(currentQuestion.questionText);
+
+        QLayoutItem* item;
+
+        while ((item = answersLayout->takeAt(0)))
+        {
+            delete item->widget();
+            delete item;
+        }
+
+        for (const QString& answer : currentQuestion.correctAnswers)
+        {
+            QCheckBox* radioButton = new QCheckBox(answer, this);
+            answersLayout->addWidget(radioButton);
+        }
+
+        for (const QString& answer : currentQuestion.incorrectAnswers)
+        {
+            QCheckBox* radioButton = new QCheckBox(answer, this);
+            answersLayout->addWidget(radioButton);
+        }
+    }
+}
+
+void TestWindow::onButtonNextClicked()
+{
+    if (this->currentQuestionIndex < tests.size())
+    {
+        // Check the selected answer
+        const TestData& currentQuestion = tests.at(currentQuestionIndex);
+        int correctCount = 0;
+        int totalAnswers = currentQuestion.correctAnswers.size();
+
+        for (int i = 0; i < answersLayout->count(); ++i)
+        {
+            QCheckBox* radioButton = qobject_cast<QCheckBox*>(answersLayout->itemAt(i)->widget());
+
+            if (radioButton && radioButton->isChecked())
+            {
+                if (currentQuestion.correctAnswers.contains(radioButton->text()))
+                    ++correctCount;
+            }
+        }
+
+        // Perform result calculation logic (you can adapt this to your specific needs)
+        double result = static_cast<double>(correctCount) / totalAnswers;
+        QString resultText = QString("Result for Question %1: %2%").arg(currentQuestionIndex + 1).arg(result * 100, 0, 'f', 2);
+        qDebug() << resultText;
+
+        currentQuestionIndex++;
+
+        if (currentQuestionIndex < tests.size())
+            displayQuestion();
+        else
+            calculateResults();
+    }
+}
+
+void TestWindow::calculateResults()
+{
+    // Implement your result calculation logic when all questions have been processed
+    // For example, display a message box with the overall result.
+    QMessageBox::information(this, "Test Completed", "Test has been completed. Add your result calculation logic here.");
+    close(); // Close the test window
+}
+
+TestWindow& TestWindow::getInstance(QWidget* parent, const QString& filePath)
+{
+    if (instance == nullptr)
+        instance = new TestWindow(parent, filePath);
+
+    return *instance;
+}
+
+void TestWindow::deleteInstance()
+{
+    delete this->instance;
+    this->instance = nullptr;
+}
 
 TestWindow::~TestWindow()
 {
-    delete ui;
+    delete this->ui;
+    this->ui = nullptr;
 }

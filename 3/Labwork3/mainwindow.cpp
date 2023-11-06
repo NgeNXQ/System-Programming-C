@@ -1,14 +1,15 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-//#include "testwindow.h"
+#include "testwindow.h"
 
+#include <QFOnt>
 #include <QPushButton>
 #include <QFileDialog>
 #include <QMessageBox>
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
-    const int MAIN_WINDOW_WIDTH = 320;
+    const int MAIN_WINDOW_WIDTH = 275;
     const int MAIN_WINDOW_HEIGHT = 125;
     const int BUTTON_LOAD_TEST_WIDTH = 150;
     const int BUTTON_LOAD_TEST_HEIGHT = 75;
@@ -24,27 +25,24 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWi
     this->buttonLoadTest = new QPushButton(this);
 
     this->buttonLoadTest->setGeometry(MAIN_WINDOW_WIDTH / 2 - BUTTON_LOAD_TEST_OFFSET_X,
-                                MAIN_WINDOW_HEIGHT / 2 - BUTTON_LOAD_TEST_OFFSET_Y,
-                                BUTTON_LOAD_TEST_WIDTH,
-                                BUTTON_LOAD_TEST_HEIGHT);
+                                      MAIN_WINDOW_HEIGHT / 2 - BUTTON_LOAD_TEST_OFFSET_Y,
+                                      BUTTON_LOAD_TEST_WIDTH,
+                                      BUTTON_LOAD_TEST_HEIGHT);
 
     this->buttonLoadTest->setText("Обрати тест");
+    this->buttonLoadTest->setFont(QFont(this->buttonLoadTest->font().family(), 12));
 
     connect(this->buttonLoadTest, &QPushButton::clicked, this, &MainWindow::onButtonLoadTestClicked);
 }
 
 void MainWindow::onButtonLoadTestClicked()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Обрати тест"), QDir::currentPath(), tr("All Files (*.txt)"));
+    const QString fileName = QFileDialog::getOpenFileName(this, tr("Обрати тест"), QDir::currentPath(), tr("All Files (*.txt)"));
 
     if (!fileName.isEmpty())
     {
         this->hide();
-
-        //TestWindow* const testWindow = new TestWindow(this, fileName);
-        //testWindow->show();
-        //delete testWindow;
-
+        TestWindow::getInstance(this, fileName).show();
     }
     else
     {

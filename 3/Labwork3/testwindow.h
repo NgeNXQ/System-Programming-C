@@ -1,56 +1,46 @@
 #ifndef TESTWINDOW_H
 #define TESTWINDOW_H
 
+#include <QList>
 #include <QLabel>
 #include <QDialog>
-#include <QGroupBox>
-#include <QPushButton>
-#include "testquestion.h"
+#include <QCheckBox>
+#include <QVBoxLayout>
 
-#define CREATE_GROUP_BOX(groupBoxName, groupBoxButtons, buttonCount, x, y, w, h) \
-    QGroupBox* groupBoxName = new QGroupBox(this); \
-    groupBoxName->setGeometry(x, y, w, h); \
-    groupBoxName->setVisible(false); \
-    groupBoxName->setFlat(true); \
-    groupBoxButtons.clear(); \
-    for (int i = 0; i < buttonCount; ++i) { \
-        QPushButton* button = new QPushButton(groupBoxName); \
-        button->setGeometry(10, 20 + i * 40, 120, 30); \
-        button->setVisible(false); \
-        groupBoxButtons.append(button); \
-    } \
+#include "testdata.h"
 
-#define DELETE_GROUP_BOX(groupBoxName, groupBoxButtons) \
-    qDeleteAll(groupBoxButtons); \
-    groupBoxButtons.clear(); \
-    delete groupBoxName; \
-    groupBoxName = nullptr; \
-
-
-QT_BEGIN_NAMESPACE
 namespace Ui { class TestWindow; }
-QT_END_NAMESPACE
 
 class TestWindow : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit TestWindow(QWidget* parent = nullptr, const QString& filePath = QString());
-    ~TestWindow();
+    static TestWindow& getInstance(QWidget* parent = nullptr, const QString& filePath = QString());
 
 private slots:
     void onButtonNextClicked();
+    void deleteInstance();
 
 private:
-    Ui::TestWindow* ui;
-    //QLabel* labelQuestion;
-    QPushButton* buttonNext;
+    static TestWindow* instance;
+    TestWindow(const TestWindow&) = delete;
+    TestWindow& operator=(const TestWindow&) = delete;
 
-    //int questionIndex;
-    //void checkAnswers();
-    //void displayQuestion();
-    //QVector<TestQuestion> questions;
+    explicit TestWindow(QWidget* parent = nullptr, const QString& filePath = QString());
+    ~TestWindow();
+
+    Ui::TestWindow* ui;
+    QLabel* labelQuestion;
+    QList<TestData> tests;
+    QPushButton* buttonNext;
+    QVBoxLayout* answersLayout;
+
+    int currentQuestionIndex;
+
+    void loadTest(const QString& filePath);
+    void displayQuestion();
+    void calculateResults();
 };
 
 #endif // TESTWINDOW_H
