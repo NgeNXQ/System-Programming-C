@@ -35,7 +35,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(this->buttonLoadTest, &QPushButton::clicked, this, &MainWindow::onButtonLoadTestClicked);
 }
 
-void MainWindow::onButtonLoadTestClicked()
+void MainWindow::onButtonLoadTestClicked(void)
 {
     const QString fileName = QFileDialog::getOpenFileName(this, tr("Обрати тест"), QDir::currentPath(), tr("All Files (*.txt)"));
 
@@ -50,7 +50,7 @@ void MainWindow::onButtonLoadTestClicked()
     }
 }
 
-MainWindow::~MainWindow()
+MainWindow::~MainWindow(void)
 {
     delete this->ui;
     this->ui = nullptr;

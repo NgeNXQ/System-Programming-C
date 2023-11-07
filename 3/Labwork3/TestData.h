@@ -2,13 +2,13 @@
 #define TESTDATA_H
 
 #include <QList>
+#include <QPair>
 #include <QString>
 
 struct TestData
 {
-    QString questionText;
-    QList<QString> correctAnswers;
-    QList<QString> incorrectAnswers;
+    QString question;
+    QList<QPair<QPair<QString, bool>, bool>> answers;
 };
 
 #endif // TESTDATA_H

@@ -12,10 +12,10 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QWidget* parent = nullptr);
-    ~MainWindow();
+    ~MainWindow(void);
 
 private slots:
-    void onButtonLoadTestClicked();
+    void onButtonLoadTestClicked(void);
 
 private:
     Ui::MainWindow* ui;

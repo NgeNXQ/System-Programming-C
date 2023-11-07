@@ -1,10 +1,9 @@
 #ifndef TESTWINDOW_H
 #define TESTWINDOW_H
 
-#include <QList>
 #include <QLabel>
 #include <QDialog>
-#include <QCheckBox>
+#include <QPushButton>
 #include <QVBoxLayout>
 
 #include "testdata.h"
@@ -19,28 +18,27 @@ public:
     static TestWindow& getInstance(QWidget* parent = nullptr, const QString& filePath = QString());
 
 private slots:
-    void onButtonNextClicked();
-    void deleteInstance();
+    void deleteInstance() const;
+    void onButtonNextClicked() const;
+    void onButtonPreviousClicked() const;
 
 private:
-    static TestWindow* instance;
     TestWindow(const TestWindow&) = delete;
+    explicit TestWindow(QWidget* parent = nullptr, const QString& filePath = QString());
+
+    ~TestWindow(void);
+
     TestWindow& operator=(const TestWindow&) = delete;
 
-    explicit TestWindow(QWidget* parent = nullptr, const QString& filePath = QString());
-    ~TestWindow();
+    static TestWindow* instance;
 
     Ui::TestWindow* ui;
+    QVBoxLayout* layout;
     QLabel* labelQuestion;
-    QList<TestData> tests;
     QPushButton* buttonNext;
-    QVBoxLayout* answersLayout;
+    QPushButton* buttonPrevious;
 
-    int currentQuestionIndex;
-
-    void loadTest(const QString& filePath);
-    void displayQuestion();
-    void calculateResults();
+    void displayTest(TestData&);
 };
 
 #endif // TESTWINDOW_H
