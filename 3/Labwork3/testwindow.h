@@ -19,8 +19,8 @@ public:
 
 private slots:
     void deleteInstance() const;
-    void onButtonNextClicked() const;
-    void onButtonPreviousClicked() const;
+    void onButtonNextClicked();
+    void onButtonPreviousClicked();
 
 private:
     TestWindow(const TestWindow&) = delete;
@@ -38,7 +38,10 @@ private:
     QPushButton* buttonNext;
     QPushButton* buttonPrevious;
 
-    void displayTest(TestData&);
+    void displayTest(const TestData&);
+
+    int currentTestIndex;
+    QVector<bool> userAnswers;
 };
 
 #endif // TESTWINDOW_H

@@ -9,13 +9,22 @@
 class TestManager
 {
 public:
+
+    enum Option
+    {
+        NEXT,
+        PREVIOUS
+    };
+
     static TestManager& getInstance();
 
-    void loadTests(const QString& filePath);
-    QList<TestData> getTests();
+    void readTests(const QString& filePath);
+    TestData& getTest(const TestManager::Option);
 
 private:
-    TestManager(); // Private constructor to prevent external instantiation
+    TestManager();
+
+    int index;
     QList<TestData> tests;
 };
 

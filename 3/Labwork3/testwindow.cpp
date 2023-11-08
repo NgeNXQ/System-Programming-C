@@ -1,11 +1,9 @@
 #include <QPair>
-#include <QFile>
 #include <QDialog>
 #include <QCheckBox>
 #include <QMessageBox>
 #include <QVBoxLayout>
 #include <QPushButton>
-#include <QScrollArea>
 
 #include "testmanager.h"
 #include "testwindow.h"
@@ -15,7 +13,7 @@
 
 TestWindow* TestWindow::instance = nullptr;
 
-TestWindow::TestWindow(QWidget* parent, const QString& filePath) : QDialog(parent), ui(new Ui::TestWindow)
+TestWindow::TestWindow(QWidget* parent, const QString& filePath) : QDialog(parent), ui(new Ui::TestWindow), currentTestIndex(0)
 {
     const int BUTTON_OFFSET = 100;
     const int TEST_WINDOW_WIDTH = 500;
@@ -52,19 +50,12 @@ TestWindow::TestWindow(QWidget* parent, const QString& filePath) : QDialog(paren
     connect(this->buttonNext, &QPushButton::clicked, this, &TestWindow::onButtonNextClicked);
     connect(this->buttonPrevious, &QPushButton::clicked, this, &TestWindow::onButtonPreviousClicked);
 
-    TestManager::getInstance().loadTests(filePath);
-    this->displayTest(TestManager::getInstance().getTests()[0]);
+    TestManager::getInstance().readTests(filePath);
+    //this->displayTest(TestManager::getInstance().getTests()[0]);
 }
 
-void TestWindow::displayTest(TestData& test)
+void TestWindow::displayTest(const TestData& test)
 {
-    //TestData test;
-
-    //test.question = "question";
-
-    //const QPair<const QString, const bool> answer(QString("(line.mid(3).trimmed()"), true);
-    //test.answers.append(QPair<const QPair<const QString&, const bool>, bool>(answer, false));
-
     this->labelQuestion->setText(test.question);
 
     QLayoutItem* item;
@@ -88,14 +79,24 @@ void TestWindow::displayTest(TestData& test)
     this->adjustSize();
 }
 
-void TestWindow::onButtonNextClicked(void) const
+void TestWindow::onButtonNextClicked(void)
 {
-
+    if (currentTestIndex < TestManager::getInstance().getTests().size() - 1)
+    {
+        userAnswers[currentTestIndex] = 0;
+        currentTestIndex++;
+        displayTest(TestManager::getInstance().getTests()[currentTestIndex]);
+    }
 }
 
-void TestWindow::onButtonPreviousClicked(void) const
+void TestWindow::onButtonPreviousClicked(void)
 {
-
+    if (currentTestIndex > 0)
+    {
+        userAnswers[currentTestIndex] = 0;
+        currentTestIndex--;
+        displayTest(TestManager::getInstance().getTests()[currentTestIndex]);
+    }
 }
 
 TestWindow& TestWindow::getInstance(QWidget* parent, const QString& filePath)

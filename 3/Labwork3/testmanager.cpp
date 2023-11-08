@@ -1,5 +1,4 @@
 #include <QPair>
-#include <QDebug>
 #include <QFile>
 #include <QString>
 #include <QTextStream>
@@ -15,7 +14,7 @@ TestManager& TestManager::getInstance()
     return instance;
 }
 
-void TestManager::loadTests(const QString& filePath)
+void TestManager::readTests(const QString& filePath)
 {
     QString line;
     TestData test;
@@ -39,9 +38,6 @@ void TestManager::loadTests(const QString& filePath)
             }
             else if (line.isEmpty())
             {
-                for (const QPair<const QPair<const QString, const bool>, bool>& answer : test.answers)
-                    qDebug() << "Added test to the list" << answer.first.first;
-
                 tests.append(test);
                 test.question.clear();
                 test.answers.clear();
@@ -49,12 +45,7 @@ void TestManager::loadTests(const QString& filePath)
         }
 
         if (!test.question.isEmpty())
-        {
-            for (const QPair<const QPair<const QString, const bool>, bool>& answer : test.answers)
-                qDebug() << "Added test to the list" << answer.first.first;
-
             tests.append(test);
-        }
 
         file.close();
     }
@@ -62,7 +53,23 @@ void TestManager::loadTests(const QString& filePath)
         throw std::runtime_error("Не вдалося прочитати вміст файлу.");
 }
 
-QList<TestData> TestManager::getTests()
+TestData& TestManager::getTest(const TestManager::Option option)
 {
-    return tests;
+    switch (option)
+    {
+    case TestManager::Option::NEXT:
+    {
+        if (this->index + 1 < this->tests.size())
+            return this->tests[++this->index];
+        else
+            return -1;
+    }
+    case TestManager::Option::PREVIOUS:
+    {
+        if (this->index - 1 > 0)
+            return this->tests[--this->index];
+        else
+            return nullptr;
+    }
+    }
 }
