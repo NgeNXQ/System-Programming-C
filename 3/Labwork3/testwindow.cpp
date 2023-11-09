@@ -11,17 +11,14 @@
 #include "testdata.h"
 #include "testmanager.h"
 
-#include <QDebug>
-
-TestWindow* TestWindow::instance = nullptr;
-
 TestWindow::TestWindow(QWidget* parent, const QString& filePath) : QDialog(parent), ui(new Ui::TestWindow)
 {
-    const int BUTTON_OFFSET = 100;
     const int TEST_WINDOW_WIDTH = 500;
     const int TEST_WINDOW_HEIGHT = 500;
+
     const int BUTTON_WIDTH = 100;
     const int BUTTON_HEIGHT = 50;
+    const int BUTTON_OFFSET = 100;
 
     this->ui->setupUi(this);
 
@@ -48,7 +45,6 @@ TestWindow::TestWindow(QWidget* parent, const QString& filePath) : QDialog(paren
     this->buttonPrevious->setText("Назад");
     this->buttonPrevious->setFont(QFont(this->buttonPrevious->font().family(), 12));
 
-    connect(this, &TestWindow::destroyed, this, &TestWindow::deleteInstance);
     connect(this->buttonNext, &QPushButton::clicked, this, &TestWindow::onButtonNextClicked);
     connect(this->buttonPrevious, &QPushButton::clicked, this, &TestWindow::onButtonPreviousClicked);
 
@@ -62,16 +58,9 @@ void TestWindow::displayTest(const int index)
 {
     if (index >= 0 && index < TestManager::getInstance().getTestsCount())
     {
-        QLayoutItem* item;
+        this->deleteTestUI();
+
         TestData test = TestManager::getInstance().getTest(testIndex);
-
-        while ((item = layout->takeAt(0)) != nullptr)
-        {
-            if (item->widget())
-                delete item->widget();
-
-            delete item;
-        }
 
         this->labelQuestion->setText(test.question);
 
@@ -101,12 +90,12 @@ void TestWindow::onButtonNextClicked(void)
     }
     else
     {
-        qDebug() << QString::number(TestManager::getInstance().calculateTestTotalResults(), 'f', 1);
+        int result = QMessageBox::question(this, "Question", "Do you want to close the test and show the result?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
 
-        //if (QMessageBox::question(nullptr, "?", "Бажаєте завершити тестування?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::Yes)
-            //QMessageBox::information(nullptr, "Результати", "Ваш результат " + QString::number(TestManager::getInstance().calculateTestTotalResults()));
-        //else
-            //this->displayTest(this->testIndex);
+        if (result == QMessageBox::Yes)
+            QMessageBox::information(this, "Результат", QString("Total Result: %1").arg(TestManager::getInstance().calculateTestTotalResults()));
+        else
+            this->displayTest(this->testIndex);
     }
 }
 
@@ -116,24 +105,35 @@ void TestWindow::onButtonPreviousClicked(void)
         this->displayTest(--this->testIndex);
 }
 
-TestWindow& TestWindow::getInstance(QWidget* parent, const QString& filePath)
+void TestWindow::deleteTestUI(void) const
 {
-    if (instance == nullptr)
-        instance = new TestWindow(parent, filePath);
+    QLayoutItem* item;
 
-    return *instance;
-}
+    while ((item = layout->takeAt(0)) != nullptr)
+    {
+        if (item->widget())
+            delete item->widget();
 
-void TestWindow::deleteInstance(void)
-{
-    this->close();
+        delete item;
+    }
 }
 
 TestWindow::~TestWindow(void)
 {
-    delete this->instance;
-    this->instance = nullptr;
+    this->deleteTestUI();
 
     delete this->ui;
     this->ui = nullptr;
+
+    delete this->layout;
+    this->layout = nullptr;
+
+    delete this->labelQuestion;
+    this->labelQuestion = nullptr;
+
+    delete this->buttonNext;
+    this->buttonNext = nullptr;
+
+    delete this->buttonPrevious;
+    this->buttonPrevious = nullptr;
 }

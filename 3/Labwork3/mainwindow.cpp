@@ -1,11 +1,11 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
-#include "testwindow.h"
-
 #include <QFOnt>
 #include <QPushButton>
 #include <QFileDialog>
 #include <QMessageBox>
+
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+#include "testwindow.h"
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -42,7 +42,8 @@ void MainWindow::onButtonLoadTestClicked(void)
     if (!fileName.isEmpty())
     {
         this->hide();
-        TestWindow::getInstance(this, fileName).show();
+        this->testWindow = new TestWindow(this, fileName);
+        this->testWindow->show();
     }
     else
     {
@@ -54,6 +55,9 @@ MainWindow::~MainWindow(void)
 {
     delete this->ui;
     this->ui = nullptr;
+
+    delete this->testWindow;
+    this->testWindow = nullptr;
 
     delete this->buttonLoadTest;
     this->buttonLoadTest = nullptr;

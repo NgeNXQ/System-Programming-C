@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QPushButton>
 
+#include "testwindow.h"
+
 namespace Ui { class MainWindow; }
 
 class MainWindow : public QMainWindow
@@ -19,6 +21,7 @@ private slots:
 
 private:
     Ui::MainWindow* ui;
+    TestWindow* testWindow;
     QPushButton* buttonLoadTest;
 };
 

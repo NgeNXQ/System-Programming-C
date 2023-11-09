@@ -61,14 +61,14 @@ void TestManager::loadTests(const QString& filePath)
             }
             else if (line.isEmpty())
             {
-                tests.append(test);
+                this->tests.append(test);
                 test.question.clear();
                 test.answers.clear();
             }
         }
 
         if (!test.question.isEmpty())
-            tests.append(test);
+            this->tests.append(test);
 
         file.close();
     }
@@ -79,30 +79,21 @@ void TestManager::loadTests(const QString& filePath)
 float TestManager::calculateTestTotalResults(void) const
 {
     float totalScore = 0.0f;
-
-    int testScore;
-    int testTotalCorrect;
+    bool isTestCorrect = true;
 
     for (const TestData& test : this->tests)
     {
-        testScore = 0;
-        testTotalCorrect = 0;
-
         for (const QPair<QPair<QString, bool>, bool>& answer : test.answers)
         {
-            if (answer.first.second)
+            if (answer.first.second != answer.second)
             {
-                ++testTotalCorrect;
-
-                if (answer.second)
-                    ++testScore;
+                isTestCorrect = false;
+                break;
             }
         }
 
-        if (testTotalCorrect > 1)
-            totalScore += static_cast<float>(testScore) / static_cast<float>(testTotalCorrect);
-        else if (testTotalCorrect == 1 && testScore == 1)
-            totalScore += 1.0f;
+        if (isTestCorrect)
+            ++totalScore;
     }
 
     return totalScore;

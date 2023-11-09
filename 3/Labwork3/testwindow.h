@@ -13,22 +13,14 @@ class TestWindow : public QDialog
     Q_OBJECT
 
 public:
-    TestWindow(const TestWindow&) = delete;
-    TestWindow& operator=(const TestWindow&) = delete;
-
-    static TestWindow& getInstance(QWidget*, const QString&);
+    TestWindow(QWidget*, const QString&);
+    ~TestWindow(void);
 
 private slots:
-    void deleteInstance();
     void onButtonNextClicked();
     void onButtonPreviousClicked();
 
 private:
-    explicit TestWindow(QWidget*, const QString&);
-    ~TestWindow(void);
-
-    static TestWindow* instance;
-
     Ui::TestWindow* ui;
     QVBoxLayout* layout;
     QLabel* labelQuestion;
@@ -38,6 +30,7 @@ private:
     int testIndex;
 
     void displayTest(const int);
+    void deleteTestUI(void) const;
     void updateResults(const int testIndex);
 };
 
