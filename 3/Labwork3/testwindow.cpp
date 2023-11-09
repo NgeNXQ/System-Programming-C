@@ -5,15 +5,17 @@
 #include <QVBoxLayout>
 #include <QPushButton>
 
-#include "testmanager.h"
 #include "testwindow.h"
 #include "ui_testwindow.h"
+
 #include "testdata.h"
 #include "testmanager.h"
 
+#include <QDebug>
+
 TestWindow* TestWindow::instance = nullptr;
 
-TestWindow::TestWindow(QWidget* parent, const QString& filePath) : QDialog(parent), ui(new Ui::TestWindow), currentTestIndex(0)
+TestWindow::TestWindow(QWidget* parent, const QString& filePath) : QDialog(parent), ui(new Ui::TestWindow)
 {
     const int BUTTON_OFFSET = 100;
     const int TEST_WINDOW_WIDTH = 500;
@@ -50,53 +52,68 @@ TestWindow::TestWindow(QWidget* parent, const QString& filePath) : QDialog(paren
     connect(this->buttonNext, &QPushButton::clicked, this, &TestWindow::onButtonNextClicked);
     connect(this->buttonPrevious, &QPushButton::clicked, this, &TestWindow::onButtonPreviousClicked);
 
-    TestManager::getInstance().readTests(filePath);
-    //this->displayTest(TestManager::getInstance().getTests()[0]);
+    TestManager::getInstance().loadTests(filePath);
+
+    this->testIndex = 0;
+    this->displayTest(testIndex);
 }
 
-void TestWindow::displayTest(const TestData& test)
+void TestWindow::displayTest(const int index)
 {
-    this->labelQuestion->setText(test.question);
-
-    QLayoutItem* item;
-
-    while ((item = layout->takeAt(0)) != nullptr)
+    if (index >= 0 && index < TestManager::getInstance().getTestsCount())
     {
-        if (item->widget())
-            delete item->widget();
+        QLayoutItem* item;
+        TestData test = TestManager::getInstance().getTest(testIndex);
 
-        delete item;
+        while ((item = layout->takeAt(0)) != nullptr)
+        {
+            if (item->widget())
+                delete item->widget();
+
+            delete item;
+        }
+
+        this->labelQuestion->setText(test.question);
+
+        for (QPair<QPair<QString, bool>, bool>& answer : test.answers)
+        {
+            QCheckBox* checkBox = new QCheckBox(answer.first.first);
+            checkBox->setFont(QFont(checkBox->font().family(), 14));
+            checkBox->setChecked(answer.second);
+            this->layout->addWidget(checkBox);
+            connect(checkBox, &QCheckBox::toggled, this, [=, &answer](bool checked) { answer.second = checked; });
+        }
+
+        this->layout->addStretch();
+        this->adjustSize();
+
+        TestManager::getInstance().updateTestResults(index, test);
     }
-
-    for (const QPair<const QPair<const QString&, const bool>, bool>& answer : test.answers)
-    {
-        QCheckBox* checkBox = new QCheckBox(answer.first.first);
-        checkBox->setFont(QFont(checkBox->font().family(), 14));
-        this->layout->addWidget(checkBox);
-    }
-
-    this->layout->addStretch();
-    this->adjustSize();
+    else
+        QMessageBox::critical(this, "Помилка", "Неправильний індекс тесту.");
 }
 
 void TestWindow::onButtonNextClicked(void)
 {
-    if (currentTestIndex < TestManager::getInstance().getTests().size() - 1)
+    if (this->testIndex + 1 < TestManager::getInstance().getTestsCount())
     {
-        userAnswers[currentTestIndex] = 0;
-        currentTestIndex++;
-        displayTest(TestManager::getInstance().getTests()[currentTestIndex]);
+        this->displayTest(++this->testIndex);
+    }
+    else
+    {
+        qDebug() << QString::number(TestManager::getInstance().calculateTestTotalResults(), 'f', 1);
+
+        //if (QMessageBox::question(nullptr, "?", "Бажаєте завершити тестування?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::Yes)
+            //QMessageBox::information(nullptr, "Результати", "Ваш результат " + QString::number(TestManager::getInstance().calculateTestTotalResults()));
+        //else
+            //this->displayTest(this->testIndex);
     }
 }
 
 void TestWindow::onButtonPreviousClicked(void)
 {
-    if (currentTestIndex > 0)
-    {
-        userAnswers[currentTestIndex] = 0;
-        currentTestIndex--;
-        displayTest(TestManager::getInstance().getTests()[currentTestIndex]);
-    }
+    if (this->testIndex > 0)
+        this->displayTest(--this->testIndex);
 }
 
 TestWindow& TestWindow::getInstance(QWidget* parent, const QString& filePath)
@@ -107,14 +124,16 @@ TestWindow& TestWindow::getInstance(QWidget* parent, const QString& filePath)
     return *instance;
 }
 
-void TestWindow::deleteInstance(void) const
+void TestWindow::deleteInstance(void)
 {
-    delete this->instance;
-    this->instance = nullptr;
+    this->close();
 }
 
 TestWindow::~TestWindow(void)
 {
+    delete this->instance;
+    this->instance = nullptr;
+
     delete this->ui;
     this->ui = nullptr;
 }

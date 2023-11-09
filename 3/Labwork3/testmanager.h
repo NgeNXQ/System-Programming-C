@@ -3,28 +3,28 @@
 
 #include <QList>
 #include <QString>
-
 #include "testdata.h"
 
 class TestManager
 {
 public:
+    TestManager(const TestManager&) = delete;
+    TestManager& operator=(const TestManager&) = delete;
 
-    enum Option
-    {
-        NEXT,
-        PREVIOUS
-    };
+    static TestManager& getInstance(void);
 
-    static TestManager& getInstance();
-
-    void readTests(const QString& filePath);
-    TestData& getTest(const TestManager::Option);
+    int getTestsCount() const;
+    void loadTests(const QString& filePath);
+    float calculateTestTotalResults(void) const;
+    const TestData& getTest(const int index) const;
+    void updateTestResults(const int index, const TestData& test);
 
 private:
-    TestManager();
+    explicit TestManager(void);
+    ~TestManager(void);
 
-    int index;
+    static TestManager* instance;
+
     QList<TestData> tests;
 };
 

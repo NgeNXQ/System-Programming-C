@@ -6,15 +6,38 @@
 #include "testdata.h"
 #include "testmanager.h"
 
-TestManager::TestManager() {}
+TestManager* TestManager::instance = nullptr;
 
-TestManager& TestManager::getInstance()
+TestManager& TestManager::getInstance(void)
 {
-    static TestManager instance;
-    return instance;
+    if (instance == nullptr)
+        instance = new TestManager();
+
+    return *instance;
 }
 
-void TestManager::readTests(const QString& filePath)
+TestManager::TestManager() { }
+
+TestManager::~TestManager(void)
+{
+    delete instance;
+    instance = nullptr;
+}
+
+int TestManager::getTestsCount() const
+{
+    return this->tests.count();;
+}
+
+void TestManager::updateTestResults(const int index, const TestData& test)
+{
+    if (index >= 0 && index < this->tests.size())
+        this->tests[index] = test;
+    else
+        throw std::runtime_error("Неправильний індекс тесту.");
+}
+
+void TestManager::loadTests(const QString& filePath)
 {
     QString line;
     TestData test;
@@ -53,23 +76,42 @@ void TestManager::readTests(const QString& filePath)
         throw std::runtime_error("Не вдалося прочитати вміст файлу.");
 }
 
-TestData& TestManager::getTest(const TestManager::Option option)
+float TestManager::calculateTestTotalResults(void) const
 {
-    switch (option)
+    float totalScore = 0.0f;
+
+    int testScore;
+    int testTotalCorrect;
+
+    for (const TestData& test : this->tests)
     {
-    case TestManager::Option::NEXT:
-    {
-        if (this->index + 1 < this->tests.size())
-            return this->tests[++this->index];
-        else
-            return -1;
+        testScore = 0;
+        testTotalCorrect = 0;
+
+        for (const QPair<QPair<QString, bool>, bool>& answer : test.answers)
+        {
+            if (answer.first.second)
+            {
+                ++testTotalCorrect;
+
+                if (answer.second)
+                    ++testScore;
+            }
+        }
+
+        if (testTotalCorrect > 1)
+            totalScore += static_cast<float>(testScore) / static_cast<float>(testTotalCorrect);
+        else if (testTotalCorrect == 1 && testScore == 1)
+            totalScore += 1.0f;
     }
-    case TestManager::Option::PREVIOUS:
-    {
-        if (this->index - 1 > 0)
-            return this->tests[--this->index];
-        else
-            return nullptr;
-    }
-    }
+
+    return totalScore;
+}
+
+const TestData& TestManager::getTest(const int index) const
+{
+    if (index >= 0 && index < this->tests.size())
+        return this->tests[index];
+
+    throw std::runtime_error("Неправильний індекс тесту.");
 }

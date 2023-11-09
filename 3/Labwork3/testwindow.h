@@ -6,8 +6,6 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
-#include "testdata.h"
-
 namespace Ui { class TestWindow; }
 
 class TestWindow : public QDialog
@@ -15,20 +13,19 @@ class TestWindow : public QDialog
     Q_OBJECT
 
 public:
-    static TestWindow& getInstance(QWidget* parent = nullptr, const QString& filePath = QString());
+    TestWindow(const TestWindow&) = delete;
+    TestWindow& operator=(const TestWindow&) = delete;
+
+    static TestWindow& getInstance(QWidget*, const QString&);
 
 private slots:
-    void deleteInstance() const;
+    void deleteInstance();
     void onButtonNextClicked();
     void onButtonPreviousClicked();
 
 private:
-    TestWindow(const TestWindow&) = delete;
-    explicit TestWindow(QWidget* parent = nullptr, const QString& filePath = QString());
-
+    explicit TestWindow(QWidget*, const QString&);
     ~TestWindow(void);
-
-    TestWindow& operator=(const TestWindow&) = delete;
 
     static TestWindow* instance;
 
@@ -38,10 +35,10 @@ private:
     QPushButton* buttonNext;
     QPushButton* buttonPrevious;
 
-    void displayTest(const TestData&);
+    int testIndex;
 
-    int currentTestIndex;
-    QVector<bool> userAnswers;
+    void displayTest(const int);
+    void updateResults(const int testIndex);
 };
 
 #endif // TESTWINDOW_H
