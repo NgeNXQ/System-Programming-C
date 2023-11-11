@@ -42,21 +42,38 @@ const TestData& TestManager::getTest(const int index) const
 float TestManager::calculateTestTotalResults(void) const
 {
     float totalScore = 0.0f;
-    bool isTestCorrect = true;
+
+    float testScore;
+    int totalCorrectAnswers;
+    int correctAnswersMarked;
+    int incorrectAnswersMarked;
 
     for (const TestData& test : this->tests)
     {
+        testScore = 0.0f;
+        totalCorrectAnswers = 0;
+        correctAnswersMarked = 0;
+        incorrectAnswersMarked = 0;
+
         for (const QPair<QPair<QString, bool>, bool>& answer : test.answers)
         {
-            if (answer.first.second != answer.second)
+            if (answer.first.second)
             {
-                isTestCorrect = false;
-                break;
+                totalCorrectAnswers++;
+
+                if (answer.second)
+                    correctAnswersMarked++;
             }
+            else if (answer.second)
+                incorrectAnswersMarked++;
         }
 
-        if (isTestCorrect)
-            ++totalScore;
+        if (totalCorrectAnswers > 0)
+            testScore = static_cast<float>(correctAnswersMarked - incorrectAnswersMarked) / totalCorrectAnswers;
+
+        testScore = std::max(testScore, 0.0f);
+
+        totalScore += testScore;
     }
 
     return totalScore;
@@ -98,17 +115,23 @@ void TestManager::loadTests(const QString& filePath)
             }
             else if (line.startsWith("[T]"))
             {
+                const int SECONDS_IN_MINUTE = 60;
+                const int MILLISECONDS_IN_MINUTE = 1000;
+
                 const int TIME = line.mid(3).trimmed().toInt();
 
                 if (TIME > 0)
-                    this->timeLimit = TIME;
+                    this->timeLimit = TIME * MILLISECONDS_IN_MINUTE * SECONDS_IN_MINUTE;
                 else
                     throw std::runtime_error("Не вдалося прочитати вміст файлу.");
             }
             else if (line.isEmpty())
             {
-                this->tests.append(*(builder.getTest()));
-                builder.reset();
+                if (!builder.getTest()->question.isEmpty())
+                {
+                    this->tests.append(*(builder.getTest()));
+                    builder.reset();
+                }
             }
             else
             {
