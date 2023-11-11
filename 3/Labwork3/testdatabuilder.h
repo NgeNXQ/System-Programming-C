@@ -8,13 +8,18 @@
 class TestDataBuilder
 {
 public:
-    //void reset(void);
-    //TestData* getTest(void) const;
-    //void setQuestion(const QString&) const;
-    //void addAnswer(const QString& answer, const bool isCorrect) const;
+    TestDataBuilder();
+    TestDataBuilder(const TestDataBuilder&);
+    TestDataBuilder& operator=(const TestDataBuilder&);
+    ~TestDataBuilder();
+
+    void reset(void);
+    TestData* getTest(void) const;
+    TestDataBuilder& setQuestion(const QString&);
+    TestDataBuilder& addAnswer(const QString&, const bool);
 
 private:
-    //TestData* test;
+    TestData* test;
 };
 
 #endif // TESTBUILDER_H

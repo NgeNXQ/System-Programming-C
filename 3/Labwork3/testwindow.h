@@ -1,6 +1,7 @@
 #ifndef TESTWINDOW_H
 #define TESTWINDOW_H
 
+#include <QTimer>
 #include <QLabel>
 #include <QDialog>
 #include <QPushButton>
@@ -17,10 +18,12 @@ public:
     ~TestWindow(void);
 
 private slots:
-    void onButtonNextClicked();
-    void onButtonPreviousClicked();
+    void onTimerTimeout(void);
+    void onButtonNextClicked(void);
+    void onButtonPreviousClicked(void);
 
 private:
+    QTimer* timer;
     Ui::TestWindow* ui;
     QVBoxLayout* layout;
     QLabel* labelQuestion;

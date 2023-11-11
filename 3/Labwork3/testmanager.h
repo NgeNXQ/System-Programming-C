@@ -2,7 +2,9 @@
 #define TESTMANAGER_H
 
 #include <QList>
+#include <QTimer>
 #include <QString>
+
 #include "testdata.h"
 
 class TestManager
@@ -14,6 +16,7 @@ public:
     static TestManager& getInstance(void);
 
     int getTestsCount() const;
+    int getTimeLimit(void) const;
     void loadTests(const QString& filePath);
     float calculateTestTotalResults(void) const;
     const TestData& getTest(const int index) const;
@@ -25,6 +28,7 @@ private:
 
     static TestManager* instance;
 
+    int timeLimit;
     QList<TestData> tests;
 };
 

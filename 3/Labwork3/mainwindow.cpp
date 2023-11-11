@@ -56,9 +56,6 @@ MainWindow::~MainWindow(void)
     delete this->ui;
     this->ui = nullptr;
 
-    delete this->testWindow;
-    this->testWindow = nullptr;
-
     delete this->buttonLoadTest;
     this->buttonLoadTest = nullptr;
 }

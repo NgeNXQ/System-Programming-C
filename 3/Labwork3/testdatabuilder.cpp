@@ -4,23 +4,33 @@
 #include <QPair>
 #include <QString>
 
-//TestData* TestDataBuilder::getTest(void) const
-//{
-//    return this->test;
-//}
+TestDataBuilder::TestDataBuilder() : test(new TestData()) { }
 
-//void TestDataBuilder::setQuestion(const QString& question) const
-//{
-//    this->test->question = question;
-//}
+TestDataBuilder::~TestDataBuilder()
+{
+    delete this->test;
+    this->test = nullptr;
+}
 
-//void TestDataBuilder::addAnswer(const QString& answer, const bool isCorrect) const
-//{
-//    this->test->answers.append(qMakePair(qMakePair(answer, isCorrect), false));
-//}
+TestData* TestDataBuilder::getTest(void) const
+{
+    return this->test;
+}
 
-//void TestDataBuilder::reset(void)
-//{
-//    delete this->test;
-//    this->test = new TestData();
-//}
+TestDataBuilder& TestDataBuilder::setQuestion(const QString& question)
+{
+    this->test->question = question;
+    return *this;
+}
+
+TestDataBuilder& TestDataBuilder::addAnswer(const QString& answer, const bool isCorrect)
+{
+    this->test->answers.append(qMakePair(qMakePair(answer, isCorrect), false));
+    return *this;
+}
+
+void TestDataBuilder::reset(void)
+{
+    delete this->test;
+    this->test = new TestData();
+}

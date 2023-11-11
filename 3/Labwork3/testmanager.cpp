@@ -5,8 +5,23 @@
 
 #include "testdata.h"
 #include "testmanager.h"
+#include "testdatabuilder.h"
 
 TestManager* TestManager::instance = nullptr;
+
+TestManager::TestManager() { }
+
+TestManager::~TestManager(void) { }
+
+int TestManager::getTestsCount() const
+{
+    return this->tests.count();;
+}
+
+int TestManager::getTimeLimit(void) const
+{
+    return this->timeLimit;
+}
 
 TestManager& TestManager::getInstance(void)
 {
@@ -16,64 +31,12 @@ TestManager& TestManager::getInstance(void)
     return *instance;
 }
 
-TestManager::TestManager() { }
-
-TestManager::~TestManager(void)
-{
-    delete instance;
-    instance = nullptr;
-}
-
-int TestManager::getTestsCount() const
-{
-    return this->tests.count();;
-}
-
-void TestManager::updateTestResults(const int index, const TestData& test)
+const TestData& TestManager::getTest(const int index) const
 {
     if (index >= 0 && index < this->tests.size())
-        this->tests[index] = test;
-    else
-        throw std::runtime_error("Неправильний індекс тесту.");
-}
+        return this->tests[index];
 
-void TestManager::loadTests(const QString& filePath)
-{
-    QString line;
-    TestData test;
-    QFile file(filePath);
-    QTextStream stream(&file);
-
-    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        while (!stream.atEnd())
-        {
-            line = stream.readLine().trimmed();
-
-            if (line.startsWith("[Q]"))
-            {
-                test.question = line.mid(3).trimmed();
-            }
-            else if (line.startsWith("[C]") || line.startsWith("[I]"))
-            {
-                QPair<QString, bool> answer(line.mid(3).trimmed(), line.startsWith("[C]"));
-                test.answers.append(QPair<QPair<QString, bool>, bool>(answer, false));
-            }
-            else if (line.isEmpty())
-            {
-                this->tests.append(test);
-                test.question.clear();
-                test.answers.clear();
-            }
-        }
-
-        if (!test.question.isEmpty())
-            this->tests.append(test);
-
-        file.close();
-    }
-    else
-        throw std::runtime_error("Не вдалося прочитати вміст файлу.");
+    throw std::runtime_error("Неправильний індекс тесту.");
 }
 
 float TestManager::calculateTestTotalResults(void) const
@@ -99,10 +62,65 @@ float TestManager::calculateTestTotalResults(void) const
     return totalScore;
 }
 
-const TestData& TestManager::getTest(const int index) const
+void TestManager::updateTestResults(const int index, const TestData& test)
 {
     if (index >= 0 && index < this->tests.size())
-        return this->tests[index];
+        this->tests[index] = test;
+    else
+        throw std::runtime_error("Неправильний індекс тесту.");
+}
 
-    throw std::runtime_error("Неправильний індекс тесту.");
+void TestManager::loadTests(const QString& filePath)
+{
+    QFile file(filePath);
+    QTextStream stream(&file);
+
+    QString line;
+    TestDataBuilder builder;
+
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        while (!stream.atEnd())
+        {
+            line = stream.readLine().trimmed();
+
+            if (line.startsWith("[Q]"))
+            {
+                builder.setQuestion(line.mid(3).trimmed());
+            }
+            else if (line.startsWith("[C]"))
+            {
+                builder.addAnswer(line.mid(3).trimmed(), true);
+            }
+            else if (line.startsWith("[I]"))
+            {
+                builder.addAnswer(line.mid(3).trimmed(), false);
+            }
+            else if (line.startsWith("[T]"))
+            {
+                const int TIME = line.mid(3).trimmed().toInt();
+
+                if (TIME > 0)
+                    this->timeLimit = TIME;
+                else
+                    throw std::runtime_error("Не вдалося прочитати вміст файлу.");
+            }
+            else if (line.isEmpty())
+            {
+                this->tests.append(*(builder.getTest()));
+                builder.reset();
+            }
+            else
+            {
+                throw std::runtime_error("Не вдалося прочитати вміст файлу.");
+            }
+        }
+
+        if (!builder.getTest()->question.isEmpty())
+            this->tests.append(*(builder.getTest()));
+
+        file.close();
+    }
+    else
+        throw std::runtime_error("Не вдалося прочитати вміст файлу.");
 }

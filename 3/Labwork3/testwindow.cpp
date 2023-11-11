@@ -1,9 +1,11 @@
 #include <QPair>
+#include <QTimer>
 #include <QDialog>
 #include <QCheckBox>
 #include <QMessageBox>
 #include <QVBoxLayout>
 #include <QPushButton>
+#include <QCoreApplication>
 
 #include "testwindow.h"
 #include "ui_testwindow.h"
@@ -25,13 +27,13 @@ TestWindow::TestWindow(QWidget* parent, const QString& filePath) : QDialog(paren
     this->setMinimumSize(TEST_WINDOW_WIDTH, TEST_WINDOW_HEIGHT);
     this->setMaximumSize(TEST_WINDOW_WIDTH, TEST_WINDOW_HEIGHT);
 
+    this->timer = new QTimer(this);
     this->layout = new QVBoxLayout(this);
     this->labelQuestion = new QLabel(this);
     this->buttonNext = new QPushButton(this);
     this->buttonPrevious = new QPushButton(this);
 
     this->ui->verticalLayout->addLayout(this->layout);
-    this->ui->verticalLayout->addWidget(this->labelQuestion);
 
     this->labelQuestion->setWordWrap(true);
     this->labelQuestion->setFont(QFont(this->labelQuestion->font().family(), 14));
@@ -45,13 +47,29 @@ TestWindow::TestWindow(QWidget* parent, const QString& filePath) : QDialog(paren
     this->buttonPrevious->setText("Назад");
     this->buttonPrevious->setFont(QFont(this->buttonPrevious->font().family(), 12));
 
+    connect(this->timer, &QTimer::timeout, this, &TestWindow::onTimerTimeout);
     connect(this->buttonNext, &QPushButton::clicked, this, &TestWindow::onButtonNextClicked);
     connect(this->buttonPrevious, &QPushButton::clicked, this, &TestWindow::onButtonPreviousClicked);
 
-    TestManager::getInstance().loadTests(filePath);
+    try
+    {
+        TestManager::getInstance().loadTests(filePath);
 
-    this->testIndex = 0;
-    this->displayTest(testIndex);
+        if (TestManager::getInstance().getTimeLimit() > 0)
+        {
+            const int MILLISECONDS_IN_MINUTE = 1000;
+            this->timer->setInterval(TestManager::getInstance().getTimeLimit() * MILLISECONDS_IN_MINUTE);
+            this->timer->start();
+        }
+
+        this->testIndex = 0;
+        this->displayTest(testIndex);
+    }
+    catch (const std::runtime_error& ex)
+    {
+        QMessageBox::critical(this, "Помилка", QString("Не вдалося завантажити тести: %1").arg(ex.what()));
+        QCoreApplication::quit();
+    }
 }
 
 void TestWindow::displayTest(const int index)
@@ -63,6 +81,7 @@ void TestWindow::displayTest(const int index)
         TestData test = TestManager::getInstance().getTest(testIndex);
 
         this->labelQuestion->setText(test.question);
+        this->layout->addWidget(this->labelQuestion);
 
         for (QPair<QPair<QString, bool>, bool>& answer : test.answers)
         {
@@ -79,7 +98,30 @@ void TestWindow::displayTest(const int index)
         TestManager::getInstance().updateTestResults(index, test);
     }
     else
+    {
         QMessageBox::critical(this, "Помилка", "Неправильний індекс тесту.");
+        QCoreApplication::quit();
+    }
+}
+
+void TestWindow::deleteTestUI(void) const
+{
+    QLayoutItem* item;
+
+    while ((item = layout->takeAt(0)) != nullptr)
+    {
+        if (item->widget() && item->widget() != this->labelQuestion)
+            delete item->widget();
+
+        delete item;
+    }
+}
+
+void TestWindow::onTimerTimeout(void)
+{
+    this->timer->stop();
+    QMessageBox::information(this, "Результат", QString("Total Result: %1").arg(TestManager::getInstance().calculateTestTotalResults()));
+    QCoreApplication::quit();
 }
 
 void TestWindow::onButtonNextClicked(void)
@@ -90,12 +132,11 @@ void TestWindow::onButtonNextClicked(void)
     }
     else
     {
-        int result = QMessageBox::question(this, "Question", "Do you want to close the test and show the result?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
-
-        if (result == QMessageBox::Yes)
+        if (QMessageBox::question(this, "Завершення тесту", "Бажаєте завершити тест?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::Yes)
+        {
             QMessageBox::information(this, "Результат", QString("Total Result: %1").arg(TestManager::getInstance().calculateTestTotalResults()));
-        else
-            this->displayTest(this->testIndex);
+            QCoreApplication::quit();
+        }
     }
 }
 
@@ -105,19 +146,6 @@ void TestWindow::onButtonPreviousClicked(void)
         this->displayTest(--this->testIndex);
 }
 
-void TestWindow::deleteTestUI(void) const
-{
-    QLayoutItem* item;
-
-    while ((item = layout->takeAt(0)) != nullptr)
-    {
-        if (item->widget())
-            delete item->widget();
-
-        delete item;
-    }
-}
-
 TestWindow::~TestWindow(void)
 {
     this->deleteTestUI();
@@ -125,14 +153,17 @@ TestWindow::~TestWindow(void)
     delete this->ui;
     this->ui = nullptr;
 
+    delete this->timer;
+    this->timer = nullptr;
+
     delete this->layout;
     this->layout = nullptr;
 
-    delete this->labelQuestion;
-    this->labelQuestion = nullptr;
-
     delete this->buttonNext;
     this->buttonNext = nullptr;
+
+    delete this->labelQuestion;
+    this->labelQuestion = nullptr;
 
     delete this->buttonPrevious;
     this->buttonPrevious = nullptr;
