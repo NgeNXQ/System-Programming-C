@@ -49,17 +49,7 @@ typedef struct
 
 static struct list_head list = LIST_HEAD_INIT(list);
 
-//static void task(void) 
-//{
-//	int_node_t* ptr;
-//
-//	list_for_each_entry(ptr, &list, node) 
-//	{
-//		ptr->value <<= 1;
-//	}
-//}
-
-static void task(void)
+static void perform_task(void)
 {
 	int_node_t* ptr;
 	uint32_t result = ~0;
@@ -97,7 +87,7 @@ static int __init mymodule_init(void)
 
 	ilprint(&list);
 
-	task();
+	perform_task();
 
 	return 0;
 
