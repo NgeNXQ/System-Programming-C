@@ -56,7 +56,7 @@ static void perform_task(void)
 
 	list_for_each_entry(ptr, &list, node)
 	{
-		result &= ptr->value; // Perform bitwise AND with each element
+		result &= ptr->value;
 	}
 
 	print_msg("Bitwise AND of all elements: %u\n", result);
