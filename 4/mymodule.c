@@ -52,7 +52,7 @@ static struct list_head list = LIST_HEAD_INIT(list);
 static void perform_task(void)
 {
 	int_node_t* ptr;
-	uint32_t result = ~0;
+	uint32_t result = 1;
 
 	list_for_each_entry(ptr, &list, node)
 	{
