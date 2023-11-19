@@ -10,7 +10,7 @@ MODULE_AUTHOR("Babich Denys");
 MODULE_DESCRIPTION("Labwork 4");
 
 #define LIST_LENGTH 12
-#define MSG_PREF "TEST: "
+#define MSG_PREF "Output: "
 
 #define print_msg(msg, ...) printk(KERN_ERR MSG_PREF msg, ##__VA_ARGS__);
 
@@ -20,7 +20,7 @@ typedef struct
 	uint32_t value;
 } int_node_t;
 
-#define ilfree(list_head) \
+#define free_list(list_head) \
 	do \
 	{ \
 		int_node_t *__ptr, *__tmp; \
@@ -31,7 +31,7 @@ typedef struct
 	} \
 	while(0) \
 
-#define ilprint(list_head) \
+#define print_list(list_head) \
 	do \
 	{ \
 		int_node_t *__ptr; \
@@ -85,20 +85,20 @@ static int __init mymodule_init(void)
 
 	print_msg("List allocation successfully finished.\n");
 
-	ilprint(&list);
+	print_list(&list);
 
 	perform_task();
 
 	return 0;
 
 alloc_err:
-	ilfree(&list);
+	free_list(&list);
 	return ret;
 }
 
 static void __exit mymodule_exit(void)
 {
-	ilfree(&list);
+	free_list(&list);
 	print_msg("mymodule deallocation succeded.\n");
 }
 
