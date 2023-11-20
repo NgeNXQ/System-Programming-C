@@ -20,7 +20,7 @@ typedef struct
 	uint32_t value;
 } int_node_t;
 
-#define free_list(list_head) \
+#define ilfree(list_head) \
 	do \
 	{ \
 		int_node_t *__ptr, *__tmp; \
@@ -31,7 +31,7 @@ typedef struct
 	} \
 	while(0) \
 
-#define print_list(list_head) \
+#define ilprint(list_head) \
 	do \
 	{ \
 		int_node_t *__ptr; \
@@ -85,20 +85,20 @@ static int __init mymodule_init(void)
 
 	print_msg("List allocation successfully finished.\n");
 
-	print_list(&list);
+	ilprint(&list);
 
 	perform_task();
 
 	return 0;
 
 alloc_err:
-	free_list(&list);
+	ilfree(&list);
 	return ret;
 }
 
 static void __exit mymodule_exit(void)
 {
-	free_list(&list);
+	ilfree(&list);
 	print_msg("mymodule deallocation succeded.\n");
 }
 
