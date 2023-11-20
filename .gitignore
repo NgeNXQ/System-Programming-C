@@ -215,7 +215,6 @@ tags
 .DS_Store
 .directory
 *.debug
-Makefile*
 *.prl
 *.app
 moc_*.cpp
