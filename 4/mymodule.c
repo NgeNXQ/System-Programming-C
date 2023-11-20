@@ -14,7 +14,7 @@ MODULE_DESCRIPTION("Labwork 4");
 
 #define print_msg(msg, ...) printk(KERN_ERR MSG_PREF msg, ##__VA_ARGS__);
 
-typedef struct 
+typedef struct
 {
 	struct list_head node;
 	uint32_t value;
@@ -44,9 +44,6 @@ typedef struct
 	} \
 	while(0) \
 
-// Initialization of the list
-// https://elixir.bootlin.com/linux/latest/source/include/linux/list.h#L714
-
 static struct list_head list = LIST_HEAD_INIT(list);
 
 static void perform_task(void)
@@ -54,12 +51,15 @@ static void perform_task(void)
 	int_node_t* ptr;
 	uint32_t result = ~0;
 
+	print_msg("Bitwise AND for each element.\n");
+
 	list_for_each_entry(ptr, &list, node)
 	{
 		result &= ptr->value;
+		print_msg("Current bitwise AND result: %u\n", result);
 	}
 
-	print_msg("Bitwise AND of all elements: %u\n", result);
+	print_msg("Toal bitwise AND result: %u\n", result);
 }
 
 static int __init mymodule_init(void)
@@ -72,7 +72,7 @@ static int __init mymodule_init(void)
 	{
 		int_node_t* ptr = (int_node_t*)kmalloc(sizeof(*ptr), GFP_KERNEL);
 
-		if (!ptr) 
+		if (!ptr)
 		{
 			print_msg("Failed to allocate memory for the list.\n");
 			ret = -ENOMEM;
