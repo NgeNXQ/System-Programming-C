@@ -10,6 +10,9 @@
 #include <linux/uaccess.h>
 #include <linux/timekeeping.h>
 
+#include <linux/time.h>
+#include <linux/sched.h>
+
 MODULE_VERSION("1.0");
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Babich Denys");
@@ -42,18 +45,22 @@ static int open(struct inode* inode, struct file* file)
 
 static ssize_t read(struct file* file, char __user* buffer, size_t count, loff_t* offset)
 {
+	const int TIMEZONE_OFFSET = 2;
 	const int SECONDS_IN_HOUR = 3600;
-	const int SECONDS_IN_MINUTE = 60;
+    	const int SECONDS_IN_MINUTE = 60;
+    	
 
-	struct timespec64 time;
-	ktime_get_real_ts64(&time);
-	uint8_t data[BUFFER_LENGTH] = { 0 };
+    	char data[BUFFER_LENGTH] = { 0 };
 
-	unsigned int hours = time.tv_sec / SECONDS_IN_HOUR;
-	unsigned int minutes = (time.tv_sec % SECONDS_IN_HOUR) / SECONDS_IN_MINUTE;
-	unsigned int seconds = time.tv_sec % SECONDS_IN_MINUTE;
+    	struct tm tm_info_utc;
+    	time64_to_tm(ktime_get_real_seconds(), 0, &tm_info_utc);
 
-	snprintf(data, BUFFER_LENGTH, "Current time: %02u:%02u:%02u", hours, minutes, seconds);
+    	tm_info_utc.tm_hour += TIMEZONE_OFFSET;
+    	
+    	if (tm_info_utc.tm_hour >= 24) 
+        	tm_info_utc.tm_hour -= 24;
+
+    	snprintf(data, BUFFER_LENGTH, "%02d:%02d:%02d", tm_info_utc.tm_hour, tm_info_utc.tm_min, tm_info_utc.tm_sec);
 
 	if (count > BUFFER_LENGTH)
 		count = BUFFER_LENGTH;
