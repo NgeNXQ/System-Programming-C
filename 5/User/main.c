@@ -8,21 +8,21 @@
 
 int main(void) 
 {
-    int fd = open("/dev/my_cdev", O_RDONLY);
+    int file_dialog = open("/dev/my_cdev", O_RDONLY);
 
-    if (fd < 0)
+    if (file_dialog < 0)
     {
         printf("Error number %d", errno);
         return -1;
     }
 
-    unsigned char buf[BUFFER_LENGTH] = { 0 };
+    unsigned char buffer[BUFFER_LENGTH] = { 0 };
 
-    read(fd, buf, BUFFER_LENGTH);
+    read(file_dialog, buffer, BUFFER_LENGTH);
 
-    printf("%s\n", buf);
+    printf("%s\n", buffer);
 
-    close(fd);
+    close(file_dialog);
 
     return 0;
 }
