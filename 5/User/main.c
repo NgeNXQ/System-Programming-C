@@ -8,7 +8,7 @@
 
 int main(void) 
 {
-    int file_dialog = open("/dev/my_cdev", O_RDONLY);
+    int file_dialog = open("/dev/labwork5_device", O_RDONLY);
 
     if (file_dialog < 0)
     {
@@ -26,3 +26,4 @@ int main(void)
 
     return 0;
 }
+
