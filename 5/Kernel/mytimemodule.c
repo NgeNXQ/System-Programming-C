@@ -18,7 +18,7 @@ MODULE_DESCRIPTION("Kernel module to provide the current time");
 #define MSG_PREF "Labwork5: "
 #define print_message(msg, ...) printk(KERN_ERR MSG_PREF msg, ##__VA_ARGS__);
 
-dev_t devt = 0;
+dev_t device_number = 0;
 static struct cdev character_device;
 static struct device* device = NULL;
 static struct class* device_class = NULL;
@@ -73,20 +73,20 @@ static int __init mytimemodule_init(void)
 {
 	long res = 0;
 
-	if ((res = alloc_chrdev_region(&devt, 0, 1, "character_device")) < 0) 
+	if ((res = alloc_chrdev_region(&device_number, 0, 1, "character_device")) < 0)
 	{
 		print_message("Cannot allocate major number\n");
 		return res;
 	}
 
-	print_message("Major = %d Minor = %d\n", MAJOR(devt), MINOR(devt));
+	print_message("Major = %d Minor = %d\n", MAJOR(device_number), MINOR(device_number));
 
 	cdev_init(&character_device, &fops);
 
-	if ((res = cdev_add(&character_device, devt, 1)) < 0) 
+	if ((res = cdev_add(&character_device, device_number, 1)) < 0)
 	{
 		print_message("Cannot add the device to the system\n");
-		unregister_chrdev_region(devt, 1);
+		unregister_chrdev_region(device_number, 1);
 		return res;
 	}
 
@@ -96,17 +96,17 @@ static int __init mytimemodule_init(void)
 	{
 		res = PTR_ERR(device_class);
 		print_message("Cannot create the struct class\n");
-		unregister_chrdev_region(devt, 1);
+		unregister_chrdev_region(device_number, 1);
 		return res;
 	}
 
-	device = device_create(device_class, NULL, devt, NULL, "character_device");
+	device = device_create(device_class, NULL, device_number, NULL, "character_device");
 
 	if (IS_ERR(labwork5_device))
 	{
-		res = PTR_ERR(dev);
+		res = PTR_ERR(device);
 		class_destroy(device_class);
-		unregister_chrdev_region(devt, 1);
+		unregister_chrdev_region(device_number, 1);
 		print_message("Cannot create the Device\n");
 		return res;
 	}
@@ -119,8 +119,8 @@ static void __exit mytimemodule_exit(void)
 {
 	cdev_del(&character_device);
 	class_destroy(device_class);
-	device_destroy(device_class, devt);
-	unregister_chrdev_region(devt, 1);
+	unregister_chrdev_region(device_number, 1);
+	device_destroy(device_class, device_number);
 	print_message("mytimemodule has been deallocated.\n");
 }
 
